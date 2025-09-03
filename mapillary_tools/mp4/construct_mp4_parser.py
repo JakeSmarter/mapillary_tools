@@ -37,7 +37,7 @@ BoxType = T.Literal[
     b"trak",
     b"udta",
     b"url ",
-    b"urn ",
+    b"urn "
 ]
 
 
@@ -66,7 +66,7 @@ MovieHeaderBox = C.Struct(
     C.Padding(8),  # const unsigned int(32)[2] reserved = 0;
     "matrix" / C.Default(C.Int32sb[9], _UNITY_MATRIX),
     C.Padding(24),  # bit(32)[6]  pre_defined = 0;
-    "next_track_ID" / C.Default(C.Int32ub, 0xFFFFFFFF),
+    "next_track_ID" / C.Default(C.Int32ub, 0xFFFFFFFF)
 )
 
 # moov -> trak -> tkhd
@@ -89,7 +89,7 @@ TrackHeaderBox = C.Struct(
     C.Padding(2),
     "matrix" / C.Default(C.Array(9, C.Int32sb), _UNITY_MATRIX),
     "width" / C.Default(C.Int32ub, 0),
-    "height" / C.Default(C.Int32ub, 0),
+    "height" / C.Default(C.Int32ub, 0)
 )
 
 # Box Type: ‘elst’
@@ -109,9 +109,9 @@ EditBox = C.Struct(
             # in media time scale units, in composition time
             "media_time" / C.IfThenElse(C.this._._.version == 1, C.Int64sb, C.Int32sb),
             "media_rate_integer" / C.Int16sb,
-            "media_rate_fraction" / C.Int16sb,
-        ),
-    ),
+            "media_rate_fraction" / C.Int16sb
+        )
+    )
 )
 
 # moov -> trak -> mdia -> mdhd
@@ -127,7 +127,7 @@ MediaHeaderBox = C.Struct(
     "timescale" / C.Int32ub,
     "duration" / C.IfThenElse(C.this.version == 1, C.Int64ub, C.Int32ub),
     "language" / C.Int16ub,
-    C.Padding(2),
+    C.Padding(2)
 )
 
 
@@ -144,7 +144,7 @@ HandlerReferenceBox = C.Struct(
     "handler_type" / C.Bytes(4),
     # Tests fail if using C.Padding(3 * 4),
     "_reserved" / C.Default(C.Int32ub[3], [0, 0, 0]),
-    "name" / C.GreedyString("utf8"),
+    "name" / C.GreedyString("utf8")
 )
 
 # BoxTypes: ‘url ‘,‘urn ‘,‘dref’
@@ -156,7 +156,7 @@ DataEntryUrlBox = C.Struct(
     "flags" / C.Default(C.Int24ub, 0),
     # the data entry contains URL location which should be utf8 string
     # but for compatibility we parse or build it as bytes
-    "data" / C.GreedyBytes,
+    "data" / C.GreedyBytes
 )
 
 DataEntryUrnBox = C.Struct(
@@ -164,7 +164,7 @@ DataEntryUrnBox = C.Struct(
     "flags" / C.Default(C.Int24ub, 0),
     # the data entry contains URN name and location which should be utf8 string
     # but for compatibility we parse or build it as bytes
-    "data" / C.GreedyBytes,
+    "data" / C.GreedyBytes
 )
 
 DataReferenceEntryBox = C.Prefixed(
@@ -175,10 +175,10 @@ DataReferenceEntryBox = C.Prefixed(
         / C.Switch(
             C.this.type,
             {b"urn ": DataEntryUrnBox, b"url ": DataEntryUrlBox},
-            C.GreedyBytes,
-        ),
+            C.GreedyBytes
+        )
     ),
-    includelength=True,
+    includelength=True
 )
 
 DataReferenceBox = C.Struct(
@@ -187,8 +187,8 @@ DataReferenceBox = C.Struct(
     "entries"
     / C.PrefixedArray(
         C.Int32ub,
-        DataReferenceEntryBox,
-    ),
+        DataReferenceEntryBox
+    )
 )
 
 _SampleEntryBox = C.Prefixed(
@@ -198,9 +198,9 @@ _SampleEntryBox = C.Prefixed(
         C.Padding(6),
         # reference entry in dinf/dref
         "data_reference_index" / C.Default(C.Int16ub, 1),
-        "data" / C.GreedyBytes,
+        "data" / C.GreedyBytes
     ),
-    includelength=True,
+    includelength=True
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> stsd
@@ -210,7 +210,7 @@ _SampleEntryBox = C.Prefixed(
 SampleDescriptionBox = C.Struct(
     "version" / C.Default(C.Int8ub, 0),
     "flags" / C.Default(C.Int24ub, 0),
-    "entries" / C.PrefixedArray(C.Int32ub, _SampleEntryBox),
+    "entries" / C.PrefixedArray(C.Int32ub, _SampleEntryBox)
 )
 
 
@@ -229,8 +229,8 @@ SampleSizeBox = C.Struct(
     / C.IfThenElse(
         C.this.sample_size == 0,
         C.Array(C.this.sample_count, C.Int32ub),
-        C.Array(0, C.Int32ub),
-    ),
+        C.Array(0, C.Int32ub)
+    )
 )
 
 # moov -> trak -> stbl -> stco
@@ -246,10 +246,10 @@ ChunkOffsetBox = C.Struct(
         C.PrefixedArray(
             C.Int32ub,
             # chunk offset
-            C.Int32ub,
+            C.Int32ub
         ),
-        [],
-    ),
+        []
+    )
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> co64
@@ -260,8 +260,8 @@ ChunkLargeOffsetBox = C.Struct(
     / C.PrefixedArray(
         C.Int32ub,
         # chunk offset
-        C.Int64ub,
-    ),
+        C.Int64ub
+    )
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> stts
@@ -278,11 +278,11 @@ TimeToSampleBox = C.Struct(
             C.Int32ub,
             C.Struct(
                 "sample_count" / C.Int32ub,
-                "sample_delta" / C.Int32ub,
-            ),
+                "sample_delta" / C.Int32ub
+            )
         ),
-        [],
-    ),
+        []
+    )
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> ctts
@@ -299,11 +299,11 @@ CompositionTimeToSampleBox = C.Struct(
             C.Int32ub,
             C.Struct(
                 "sample_count" / C.Int32ub,
-                "sample_offset" / C.Int32ub,
-            ),
+                "sample_offset" / C.Int32ub
+            )
         ),
-        [],
-    ),
+        []
+    )
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> stsc
@@ -322,11 +322,11 @@ SampleToChunkBox = C.Struct(
             C.Struct(
                 "first_chunk" / C.Int32ub,
                 "samples_per_chunk" / C.Int32ub,
-                "sample_description_index" / C.Int32ub,
-            ),
+                "sample_description_index" / C.Int32ub
+            )
         ),
-        [],
-    ),
+        []
+    )
 )
 
 # moov -> trak -> mdia -> minf -> stbl -> stss
@@ -344,26 +344,26 @@ SyncSampleBox = C.Struct(
     / C.Default(
         C.PrefixedArray(
             C.Int32ub,
-            C.Int32ub,
+            C.Int32ub
         ),
-        [],
-    ),
+        []
+    )
 )
 
 BoxHeader0 = C.Struct(
     "size32" / C.Const(0, C.Int32ub),
-    "type" / C.Bytes(4),
+    "type" / C.Bytes(4)
 )
 
 BoxHeader32 = C.Struct(
     "size" / C.Int32ub,
-    "type" / C.Bytes(4),
+    "type" / C.Bytes(4)
 )
 
 BoxHeader64 = C.Struct(
     "size32" / C.Const(1, C.Int32ub),
     "type" / C.Bytes(4),
-    "size" / C.Int64ub,
+    "size" / C.Int64ub
 )
 
 
@@ -384,7 +384,7 @@ class Box64ConstructBuilder:
     def __init__(
         self,
         nested_switch_map: SwitchMapType,
-        extend_eof: bool = False,
+        extend_eof: bool = False
     ) -> None:
         self._box = None
         self._extend_eof = extend_eof
@@ -397,7 +397,7 @@ class Box64ConstructBuilder:
         self._switch = C.Switch(
             C.this.type,
             switch_map,
-            C.GreedyBytes,
+            C.GreedyBytes
         )
 
     @property
@@ -407,7 +407,7 @@ class Box64ConstructBuilder:
                 "data"
                 / C.FixedSized(
                     C.this.size - 8,
-                    self._switch,
+                    self._switch
                 )
             )
 
@@ -415,19 +415,19 @@ class Box64ConstructBuilder:
                 "data"
                 / C.FixedSized(
                     C.this.size - 16,
-                    self._switch,
+                    self._switch
                 )
             )
 
             BoxData0 = C.Struct(
-                "data" / self._switch,
+                "data" / self._switch
             )
 
             if self._extend_eof:
                 self._box = C.Select(
                     BoxHeader32 + BoxData32,
                     BoxHeader64 + BoxData64,
-                    BoxHeader0 + BoxData0,
+                    BoxHeader0 + BoxData0
                 )
             else:
                 self._box = C.Select(BoxHeader32 + BoxData32, BoxHeader64 + BoxData64)
@@ -457,7 +457,7 @@ class Box32ConstructBuilder(Box64ConstructBuilder):
             self._box = C.Prefixed(
                 C.Int32ub,
                 C.Struct("type" / C.Bytes(4), "data" / self._switch),
-                includelength=True,
+                includelength=True
             )
 
         return self._box
@@ -492,7 +492,7 @@ CMAP: SwitchMapType = {
     b"urn ": DataEntryUrnBox,
     b"url ": DataEntryUrlBox,
     b"mvhd": MovieHeaderBox,
-    b"elst": EditBox,
+    b"elst": EditBox
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
@@ -504,49 +504,49 @@ CMAP[b"stbl"] = {
     b"stsz": CMAP[b"stsz"],
     b"stco": CMAP[b"stco"],
     b"co64": CMAP[b"co64"],
-    b"stss": CMAP[b"stss"],
+    b"stss": CMAP[b"stss"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"dinf"] = {
-    b"dref": CMAP[b"dref"],
+    b"dref": CMAP[b"dref"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"minf"] = {
     b"dinf": CMAP[b"dinf"],
-    b"stbl": CMAP[b"stbl"],
+    b"stbl": CMAP[b"stbl"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"mdia"] = {
     b"mdhd": CMAP[b"mdhd"],
     b"hdlr": CMAP[b"hdlr"],
-    b"minf": CMAP[b"minf"],
+    b"minf": CMAP[b"minf"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"edts"] = {
-    b"elst": CMAP[b"elst"],
+    b"elst": CMAP[b"elst"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"trak"] = {
     b"tkhd": CMAP[b"tkhd"],
     b"edts": CMAP[b"edts"],
-    b"mdia": CMAP[b"mdia"],
+    b"mdia": CMAP[b"mdia"]
 }
 
 # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
 CMAP[b"moov"] = {
     b"mvhd": CMAP[b"mvhd"],
     b"udta": {},
-    b"trak": CMAP[b"trak"],
+    b"trak": CMAP[b"trak"]
 }
 
 # pyre-ignore[9]: pyre does not support recursive type SwitchMapType
 MP4_CMAP: SwitchMapType = {
-    b"moov": CMAP[b"moov"],
+    b"moov": CMAP[b"moov"]
 }
 
 
@@ -569,7 +569,7 @@ MP4_WITHOUT_STBL_CMAP: SwitchMapType = {
     # pyre-ignore[6]: pyre does not support recursive type SwitchMapType
     b"moov": _new_cmap_without_boxes(
         CMAP[b"moov"], T.cast(T.Sequence[BoxType], [b"stbl"])
-    ),
+    )
 }
 
 # for parsing mp4 only
@@ -582,7 +582,7 @@ MP4WithoutSTBLBuilderConstruct = Box32ConstructBuilder(MP4_WITHOUT_STBL_CMAP)
 
 MOOVWithoutSTBLBuilderConstruct = Box32ConstructBuilder(
     T.cast(SwitchMapType, MP4_WITHOUT_STBL_CMAP[b"moov"]),
-    extend_eof=False,
+    extend_eof=False
 )
 
 

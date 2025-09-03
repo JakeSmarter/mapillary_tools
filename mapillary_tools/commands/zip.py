@@ -13,18 +13,18 @@ class Command:
         parser.add_argument(
             "import_path",
             help="Path to your images.",
-            type=Path,
+            type=Path
         )
         parser.add_argument(
             "zip_dir",
             help="Path to store zipped images.",
-            type=Path,
+            type=Path
         )
         parser.add_argument(
             "--desc_path",
             help='Specify the path to read image description. If it is "-", then read from STDIN.',
             default=None,
-            required=False,
+            required=False
         )
 
     def run(self, vars_args: dict):

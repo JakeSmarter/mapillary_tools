@@ -25,7 +25,7 @@ class FileType(enum.Enum):
 NATIVE_VIDEO_FILETYPES = {
     FileType.BLACKVUE,
     FileType.CAMM,
-    FileType.GOPRO,
+    FileType.GOPRO
 }
 
 
@@ -151,7 +151,7 @@ M = T.TypeVar("M")
 
 
 def separate_errors(
-    metadatas: T.Iterable[M | ErrorMetadata],
+    metadatas: T.Iterable[M | ErrorMetadata]
 ) -> tuple[list[M], list[ErrorMetadata]]:
     good: list[M] = []
     bad: list[ErrorMetadata] = []
@@ -172,7 +172,7 @@ def describe_error_metadata(
 
 
 def group_and_sort_images(
-    metadatas: T.Iterable[ImageMetadata],
+    metadatas: T.Iterable[ImageMetadata]
 ) -> dict[str, list[ImageMetadata]]:
     # group metadatas by uuid
     sequences_by_uuid: dict[str, list[ImageMetadata]] = {}
@@ -190,7 +190,7 @@ def group_and_sort_images(
         dedups = {metadata.filename.resolve(): metadata for metadata in sequence}
         sorted_sequences_by_uuid[sequence_uuid] = sorted(
             dedups.values(),
-            key=lambda metadata: metadata.sort_key(),
+            key=lambda metadata: metadata.sort_key()
         )
     return sorted_sequences_by_uuid
 

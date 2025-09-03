@@ -62,7 +62,7 @@ def write_history(
     md5sum: str,
     params: JSONDict,
     summary: JSONDict,
-    metadatas: T.Sequence[types.Metadata] | None = None,
+    metadatas: T.Sequence[types.Metadata] | None = None
 ) -> None:
     if not constants.MAPILLARY_UPLOAD_HISTORY_PATH:
         return
@@ -141,7 +141,7 @@ class PersistentCache:
 
         data = {
             "expires_at": time.time() + expires_in,
-            "value": value,
+            "value": value
         }
 
         payload: bytes = json.dumps(data).encode("utf-8")

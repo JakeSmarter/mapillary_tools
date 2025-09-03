@@ -148,12 +148,12 @@ def finish_upload(
     user_session: requests.Session,
     file_handle: str,
     cluster_filetype: ClusterFileType,
-    organization_id: int | str | None = None,
+    organization_id: int | str | None = None
 ) -> requests.Response:
     url = f"{MAPILLARY_GRAPH_API_ENDPOINT}/finish_upload"
     json_data: dict[str, str | int] = {
         "file_handle": file_handle,
-        "file_type": cluster_filetype.value,
+        "file_type": cluster_filetype.value
     }
     if organization_id is not None:
         json_data["organization_id"] = organization_id

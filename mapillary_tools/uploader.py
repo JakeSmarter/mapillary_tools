@@ -39,7 +39,7 @@ from . import (
     types,
     upload_api_v4,
     utils,
-    VERSION,
+    VERSION
 )
 from .camm import camm_builder, camm_parser
 from .gpmf import gpmf_parser
@@ -47,7 +47,7 @@ from .mp4 import simple_mp4_builder
 from .serializer.description import (
     desc_file_to_exif,
     DescriptionJSONSerializer,
-    validate_image_desc,
+    validate_image_desc
 )
 
 
@@ -192,7 +192,7 @@ EventName = T.Literal[
     "upload_retrying",
     "upload_end",
     "upload_failed",
-    "upload_finished",
+    "upload_finished"
 ]
 
 
@@ -244,7 +244,7 @@ class VideoUploader:
                 "sequence_idx": idx,
                 "file_type": video_metadata.filetype.value,
                 "import_path": str(video_metadata.filename),
-                "sequence_md5sum": video_metadata.md5sum,
+                "sequence_md5sum": video_metadata.md5sum
             }
 
             try:
@@ -252,13 +252,13 @@ class VideoUploader:
                     # Upload the mp4 stream
                     file_handle = mly_uploader.upload_stream(
                         T.cast(T.IO[bytes], camm_fp),
-                        progress=T.cast(T.Dict[str, T.Any], progress),
+                        progress=T.cast(T.Dict[str, T.Any], progress)
                     )
 
                 cluster_id = mly_uploader.finish_upload(
                     file_handle,
                     api_v4.ClusterFileType.CAMM,
-                    progress=T.cast(T.Dict[str, T.Any], progress),
+                    progress=T.cast(T.Dict[str, T.Any], progress)
                 )
             except Exception as ex:
                 yield video_metadata, UploadResult(error=ex)
@@ -338,7 +338,7 @@ class ZipUploader:
                 cluster_id = cls._upload_zipfile(
                     mly_uploader,
                     zip_path,
-                    progress=T.cast(T.Dict[str, T.Any], progress),
+                    progress=T.cast(T.Dict[str, T.Any], progress)
                 )
             except Exception as ex:
                 yield zip_path, UploadResult(error=ex)
@@ -389,7 +389,7 @@ class ZipUploader:
                     "sequence_image_count": len(sequence),
                     "sequence_uuid": sequence_uuid,
                     "file_type": types.FileType.ZIP.value,
-                    "sequence_md5sum": sequence_md5sum,
+                    "sequence_md5sum": sequence_md5sum
                 }
 
                 try:
@@ -399,7 +399,7 @@ class ZipUploader:
                     cluster_id = uploader.finish_upload(
                         file_handle,
                         api_v4.ClusterFileType.ZIP,
-                        progress=T.cast(T.Dict[str, T.Any], sequence_progress),
+                        progress=T.cast(T.Dict[str, T.Any], sequence_progress)
                     )
                 except Exception as ex:
                     yield sequence_uuid, UploadResult(error=ex)
@@ -412,7 +412,7 @@ class ZipUploader:
         cls,
         uploader: Uploader,
         zip_path: Path,
-        progress: dict[str, T.Any] | None = None,
+        progress: dict[str, T.Any] | None = None
     ) -> str:
         if progress is None:
             progress = {}
@@ -430,7 +430,7 @@ class ZipUploader:
             **T.cast(SequenceProgress, progress),
             "sequence_image_count": len(namelist),
             "sequence_md5sum": sequence_md5sum,
-            "file_type": types.FileType.ZIP.value,
+            "file_type": types.FileType.ZIP.value
         }
 
         with zip_path.open("rb") as zip_fp:
@@ -441,7 +441,7 @@ class ZipUploader:
         cluster_id = uploader.finish_upload(
             file_handle,
             api_v4.ClusterFileType.ZIP,
-            progress=T.cast(T.Dict[str, T.Any], mutable_progress),
+            progress=T.cast(T.Dict[str, T.Any], mutable_progress)
         )
 
         return cluster_id
@@ -450,7 +450,7 @@ class ZipUploader:
     def _zip_sequence_fp(
         cls,
         sequence: T.Sequence[types.ImageMetadata],
-        zip_fp: T.IO[bytes],
+        zip_fp: T.IO[bytes]
     ) -> str:
         # Write a sequence of ImageMetadata into the zipfile handle.
         # The sequence has to be one sequence and sorted.
@@ -474,7 +474,7 @@ class ZipUploader:
             zipf.comment = json.dumps(
                 {"sequence_md5sum": sequence_md5sum},
                 sort_keys=True,
-                separators=(",", ":"),
+                separators=(",", ":")
             ).encode("utf-8")
 
         return sequence_md5sum
@@ -558,13 +558,13 @@ class ImageSequenceUploader:
                 "sequence_image_count": len(sequence),
                 "sequence_uuid": sequence_uuid,
                 "file_type": types.FileType.IMAGE.value,
-                "sequence_md5sum": sequence_md5sum,
+                "sequence_md5sum": sequence_md5sum
             }
 
             try:
                 cluster_id = self._upload_sequence_and_finish(
                     sequence,
-                    sequence_progress=T.cast(dict[str, T.Any], sequence_progress),
+                    sequence_progress=T.cast(dict[str, T.Any], sequence_progress)
                 )
             except Exception as ex:
                 yield sequence_uuid, UploadResult(error=ex)
@@ -574,7 +574,7 @@ class ImageSequenceUploader:
     def _upload_sequence_and_finish(
         self,
         sequence: T.Sequence[types.ImageMetadata],
-        sequence_progress: dict[str, T.Any],
+        sequence_progress: dict[str, T.Any]
     ) -> str:
         _validate_metadatas(sequence)
 
@@ -598,7 +598,7 @@ class ImageSequenceUploader:
         cluster_id = uploader.finish_upload(
             manifest_file_handle,
             api_v4.ClusterFileType.MLY_BUNDLE_MANIFEST,
-            progress=sequence_progress,
+            progress=sequence_progress
         )
 
         return cluster_id
@@ -609,7 +609,7 @@ class ImageSequenceUploader:
         manifest = {
             "version": "1",
             "upload_type": "images",
-            "image_handles": image_file_handles,
+            "image_handles": image_file_handles
         }
 
         with io.BytesIO() as manifest_fp:
@@ -626,7 +626,7 @@ class ImageSequenceUploader:
     def _upload_images_parallel(
         self,
         sequence: T.Sequence[types.ImageMetadata],
-        sequence_progress: dict[str, T.Any],
+        sequence_progress: dict[str, T.Any]
     ) -> list[str]:
         if not sequence:
             return []
@@ -650,7 +650,7 @@ class ImageSequenceUploader:
                     image_queue,
                     lock,
                     upload_interrupted,
-                    sequence_progress,
+                    sequence_progress
                 )
                 for _ in range(max_workers)
             ]
@@ -686,7 +686,7 @@ class ImageSequenceUploader:
         image_queue: queue.Queue[tuple[int, types.ImageMetadata]],
         lock: threading.Lock,
         upload_interrupted: threading.Event,
-        sequence_progress: dict[str, T.Any],
+        sequence_progress: dict[str, T.Any]
     ) -> list[tuple[int, str]]:
         indexed_file_handles = []
 
@@ -707,7 +707,7 @@ class ImageSequenceUploader:
                 # Create a new mutatble progress to keep the sequence_progress immutable
                 image_progress = {
                     **sequence_progress,
-                    "import_path": str(image_metadata.filename),
+                    "import_path": str(image_metadata.filename)
                 }
 
                 # image_progress will be updated during uploading
@@ -736,7 +736,7 @@ class CachedImageUploader:
     def __init__(
         self,
         upload_options: UploadOptions,
-        cache: history.PersistentCache | None = None,
+        cache: history.PersistentCache | None = None
     ):
         self.upload_options = upload_options
         self.cache = cache
@@ -748,7 +748,7 @@ class CachedImageUploader:
         self,
         user_session: requests.Session,
         image_metadata: types.ImageMetadata,
-        image_progress: dict[str, T.Any],
+        image_progress: dict[str, T.Any]
     ) -> str:
         image_bytes = self.dump_image_bytes(image_metadata)
 
@@ -763,7 +763,7 @@ class CachedImageUploader:
             file_handle = uploader.upload_stream(
                 io.BytesIO(image_bytes),
                 session_key=session_key,
-                progress=image_progress,
+                progress=image_progress
             )
             self._set_file_handle_cache(session_key, file_handle)
 
@@ -816,7 +816,7 @@ class Uploader:
         self,
         upload_options: UploadOptions,
         user_session: requests.Session | None = None,
-        emitter: EventEmitter | None = None,
+        emitter: EventEmitter | None = None
     ):
         self.upload_options = upload_options
         self.user_session = user_session
@@ -830,7 +830,7 @@ class Uploader:
         self,
         fp: T.IO[bytes],
         session_key: str | None = None,
-        progress: dict[str, T.Any] | None = None,
+        progress: dict[str, T.Any] | None = None
     ) -> str:
         if progress is None:
             progress = {}
@@ -855,7 +855,7 @@ class Uploader:
                         self.user_session,
                         fp,
                         session_key,
-                        T.cast(UploaderProgress, progress),
+                        T.cast(UploaderProgress, progress)
                     )
                 else:
                     with api_v4.create_user_session(
@@ -865,7 +865,7 @@ class Uploader:
                             user_session,
                             fp,
                             session_key,
-                            T.cast(UploaderProgress, progress),
+                            T.cast(UploaderProgress, progress)
                         )
             except BaseException as ex:  # Include KeyboardInterrupt
                 self._handle_upload_exception(ex, T.cast(UploaderProgress, progress))
@@ -882,7 +882,7 @@ class Uploader:
         self,
         file_handle: str,
         cluster_filetype: api_v4.ClusterFileType,
-        progress: dict[str, T.Any] | None = None,
+        progress: dict[str, T.Any] | None = None
     ) -> str:
         # Finish upload with safe retries guraranteed
         if progress is None:
@@ -900,7 +900,7 @@ class Uploader:
                     user_session,
                     file_handle,
                     cluster_filetype,
-                    organization_id=organization_id,
+                    organization_id=organization_id
                 )
 
             body = api_v4.jsonify_response(resp)
@@ -922,11 +922,11 @@ class Uploader:
             upload_service = upload_api_v4.FakeUploadService(
                 user_session,
                 session_key,
-                upload_path=Path(upload_path) if upload_path is not None else None,
+                upload_path=Path(upload_path) if upload_path is not None else None
             )
             LOG.info(
                 "Dry-run mode enabled, uploading to %s",
-                upload_service.upload_path.joinpath(session_key),
+                upload_service.upload_path.joinpath(session_key)
             )
         else:
             upload_service = upload_api_v4.UploadService(user_session, session_key)
@@ -1005,7 +1005,7 @@ class Uploader:
         user_session: requests.Session,
         fp: T.IO[bytes],
         session_key: str,
-        progress: UploaderProgress | None = None,
+        progress: UploaderProgress | None = None
     ) -> str:
         # Upload the stream with safe retries guraranteed
         if progress is None:
@@ -1032,7 +1032,7 @@ class Uploader:
             remaining_bytes = abs(progress["entity_size"] - begin_offset)
             read_timeout = max(
                 api_v4.REQUESTS_TIMEOUT,
-                remaining_bytes / constants.MIN_UPLOAD_SPEED,
+                remaining_bytes / constants.MIN_UPLOAD_SPEED
             )
 
         # Upload from begin_offset
@@ -1272,7 +1272,7 @@ _SUFFIX_MAP: dict[api_v4.ClusterFileType | types.FileType, str] = {
     types.FileType.BLACKVUE: ".mp4",
     types.FileType.CAMM: ".mp4",
     types.FileType.GOPRO: ".mp4",
-    types.FileType.VIDEO: ".mp4",
+    types.FileType.VIDEO: ".mp4"
 }
 
 
@@ -1312,7 +1312,7 @@ def _build_upload_cache_path(upload_options: UploadOptions) -> Path:
     # Use hash to avoid log sensitive data
     user_fingerprint = utils.md5sum_fp(
         io.BytesIO((api_v4.MAPILLARY_CLIENT_TOKEN + user_id).encode("utf-8")),
-        md5=hashlib.sha256(),
+        md5=hashlib.sha256()
     ).hexdigest()[:24]
 
     cache_path = (
@@ -1326,7 +1326,7 @@ def _build_upload_cache_path(upload_options: UploadOptions) -> Path:
 
 
 def _maybe_create_persistent_cache_instance(
-    upload_options: UploadOptions,
+    upload_options: UploadOptions
 ) -> history.PersistentCache | None:
     # Create a persistent cache instance if caching is enabled.
 

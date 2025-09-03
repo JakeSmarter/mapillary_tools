@@ -18,7 +18,7 @@ class GeotagVideosFromVideo(GeotagVideosFromGeneric):
     def __init__(
         self,
         filetypes: set[FileType] | None = None,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         self.filetypes = filetypes

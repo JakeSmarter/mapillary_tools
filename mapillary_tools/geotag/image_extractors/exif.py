@@ -54,7 +54,7 @@ class ImageEXIFExtractor(BaseImageExtractor):
                 height=exif.extract_height(),
                 MAPOrientation=exif.extract_orientation(),
                 MAPDeviceMake=exif.extract_make(),
-                MAPDeviceModel=exif.extract_model(),
+                MAPDeviceModel=exif.extract_model()
             )
 
         return image_metadata

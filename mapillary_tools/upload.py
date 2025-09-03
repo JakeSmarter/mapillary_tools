@@ -24,7 +24,7 @@ from . import (
     types,
     uploader,
     utils,
-    VERSION,
+    VERSION
 )
 from .serializer.description import DescriptionJSONSerializer
 from .types import FileType
@@ -48,7 +48,7 @@ def upload(
     dry_run: bool = False,
     nofinish: bool = False,
     noresume: bool = False,
-    skip_subfolders: bool = False,
+    skip_subfolders: bool = False
 ) -> None:
     LOG.info("==> Uploading...")
 
@@ -70,7 +70,7 @@ def upload(
             "organization_key": user_items.get("MAPOrganizationKey"),
             "user_key": user_items.get("MAPSettingsUserKey"),
             "version": VERSION,
-            "run_at": time.time(),
+            "run_at": time.time()
         }
         _setup_history(
             emitter, upload_run_params, metadatas, reupload=reupload, nofinish=nofinish
@@ -91,7 +91,7 @@ def upload(
             dry_run=dry_run,
             nofinish=nofinish,
             noresume=noresume,
-            num_upload_workers=num_upload_workers,
+            num_upload_workers=num_upload_workers
         )
     except ValueError as ex:
         raise exceptions.MapillaryBadParameterError(str(ex)) from ex
@@ -165,7 +165,7 @@ def log_exception(ex: Exception) -> None:
     elif isinstance(ex, api_v4.HTTPContentError):
         LOG.error(
             f"{exc_name}: {ex}: {http.readable_http_response(ex.response)}",
-            exc_info=exc_info,
+            exc_info=exc_info
         )
     else:
         LOG.error(f"{exc_name}: {ex}", exc_info=exc_info)
@@ -193,7 +193,7 @@ def _setup_history(
     upload_run_params: JSONDict,
     metadatas: list[types.Metadata],
     reupload: bool,
-    nofinish: bool,
+    nofinish: bool
 ) -> None:
     @emitter.on("upload_start")
     def check_duplication(payload: uploader.Progress):
@@ -279,7 +279,7 @@ def _setup_tdqm(emitter: uploader.EventEmitter) -> None:
             unit_scale=True,
             unit_divisor=1024,
             initial=payload.get("offset", 0),
-            disable=LOG.isEnabledFor(logging.DEBUG),
+            disable=LOG.isEnabledFor(logging.DEBUG)
         )
 
     @emitter.on("upload_fetch_offset")
@@ -293,7 +293,7 @@ def _setup_tdqm(emitter: uploader.EventEmitter) -> None:
                 progress_percent = (begin_offset / upload_pbar.total) * 100
                 upload_pbar.write(
                     f"Resuming upload at {begin_offset=} ({progress_percent:3.0f}%)",
-                    file=sys.stderr,
+                    file=sys.stderr
                 )
             else:
                 upload_pbar.write(
@@ -452,7 +452,7 @@ def _summarize(stats: T.Sequence[_APIStats]) -> dict:
         "size": round(total_entity_size_mb, 4),
         "uploaded_size": round(total_uploaded_size_mb, 4),
         "speed": round(speed, 4),
-        "time": round(total_upload_time, 4),
+        "time": round(total_upload_time, 4)
     }
 
     return upload_summary
@@ -468,7 +468,7 @@ def _show_upload_summary(stats: T.Sequence[_APIStats], errors: T.Sequence[Except
     for error_type, error_list in errors_by_type.items():
         if error_type is UploadedAlready:
             LOG.info(
-                f"Skipped {len(error_list)} already uploaded sequences (use --reupload to force re-upload)",
+                f"Skipped {len(error_list)} already uploaded sequences (use --reupload to force re-upload)"
             )
         else:
             LOG.info(f"{len(error_list)} uploads failed due to {error_type.__name__}")
@@ -549,12 +549,12 @@ def _gen_upload_everything(
     mly_uploader: uploader.Uploader,
     metadatas: T.Sequence[types.Metadata],
     import_paths: T.Sequence[Path],
-    skip_subfolders: bool,
+    skip_subfolders: bool
 ):
     # Upload images
     image_metadatas = _find_metadata_with_filename_existed_in(
         (m for m in metadatas if isinstance(m, types.ImageMetadata)),
-        utils.find_images(import_paths, skip_subfolders=skip_subfolders),
+        utils.find_images(import_paths, skip_subfolders=skip_subfolders)
     )
     image_uploader = uploader.ImageSequenceUploader(
         mly_uploader.upload_options, emitter=mly_uploader.emitter
@@ -564,7 +564,7 @@ def _gen_upload_everything(
     # Upload videos
     video_metadatas = _find_metadata_with_filename_existed_in(
         (m for m in metadatas if isinstance(m, types.VideoMetadata)),
-        utils.find_videos(import_paths, skip_subfolders=skip_subfolders),
+        utils.find_videos(import_paths, skip_subfolders=skip_subfolders)
     )
     yield from uploader.VideoUploader.upload_videos(mly_uploader, video_metadatas)
 
@@ -632,7 +632,7 @@ def _continue_or_fail(ex: Exception) -> Exception:
 def _load_descs(
     _metadatas_from_process: T.Sequence[types.MetadataOrError] | None,
     import_paths: T.Sequence[Path],
-    desc_path: str | None,
+    desc_path: str | None
 ) -> list[types.Metadata]:
     metadatas: list[types.Metadata]
 

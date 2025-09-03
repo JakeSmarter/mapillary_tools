@@ -74,7 +74,7 @@ class Session(requests.Session):
                 # HTTPSConnectionPool(host='graph.mapillary.com', port=443): Max retries exceeded with url: /login (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1018)')))
                 LOG.warning(
                     "SSL error occurred, falling back to system SSL certificates: %s",
-                    ex,
+                    ex
                 )
                 return self.request(method, url, *args, **kwargs)
 
@@ -174,7 +174,7 @@ def _sanitize(headers: T.Mapping[T.Any, T.Any]) -> T.Mapping[T.Any, T.Any]:
             "access-token",
             "access_token",
             "password",
-            "user_upload_token",
+            "user_upload_token"
         ]:
             new_headers[k] = "[REDACTED]"
         else:

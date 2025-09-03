@@ -81,7 +81,7 @@ class MapillaryDuplicationError(MapillaryDescriptionError):
         message: str,
         desc: T.Mapping[str, T.Any],
         distance: float,
-        angle_diff: float | None,
+        angle_diff: float | None
     ) -> None:
         super().__init__(message)
         self.desc = desc

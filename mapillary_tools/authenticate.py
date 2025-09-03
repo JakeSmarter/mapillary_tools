@@ -21,7 +21,7 @@ def authenticate(
     user_email: str | None = None,
     user_password: str | None = None,
     jwt: str | None = None,
-    delete: bool = False,
+    delete: bool = False
 ):
     # Prompt for authentication information and save it to the config file
 
@@ -55,7 +55,7 @@ def authenticate(
         if profile_name in all_user_items:
             LOG.warning(
                 'The profile "%s" already exists and will be overridden',
-                profile_name,
+                profile_name
             )
         else:
             LOG.info('Creating new profile: "%s"', profile_name)
@@ -189,7 +189,7 @@ def _verify_user_auth(user_items: config.UserItem) -> config.UserItem:
     return {
         **user_items,
         "MAPSettingsUsername": data.get("username"),
-        "MAPSettingsUserKey": data.get("id"),
+        "MAPSettingsUserKey": data.get("id")
     }
 
 
@@ -256,7 +256,7 @@ def _is_login_retryable(ex: requests.HTTPError) -> bool:
 
 def _prompt_login(
     user_email: str | None = None,
-    user_password: str | None = None,
+    user_password: str | None = None
 ) -> config.UserItem:
     _enabled = _prompt_enabled()
 
@@ -292,7 +292,7 @@ def _prompt_login(
 
     user_items: config.UserItem = {
         "user_upload_token": str(data["access_token"]),
-        "MAPSettingsUserKey": str(data["user_id"]),
+        "MAPSettingsUserKey": str(data["user_id"])
     }
 
     return user_items

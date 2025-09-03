@@ -29,7 +29,7 @@ from ..types import (
     ImageMetadata,
     Metadata,
     MetadataOrError,
-    VideoMetadata,
+    VideoMetadata
 )
 
 
@@ -109,37 +109,37 @@ ImageDescriptionEXIFSchema = {
             "type": "number",
             "description": "Latitude of the image",
             "minimum": -90,
-            "maximum": 90,
+            "maximum": 90
         },
         "MAPLongitude": {
             "type": "number",
             "description": "Longitude of the image",
             "minimum": -180,
-            "maximum": 180,
+            "maximum": 180
         },
         "MAPAltitude": {
             "type": "number",
-            "description": "Altitude of the image, in meters",
+            "description": "Altitude of the image, in meters"
         },
         "MAPCaptureTime": {
             "type": "string",
             "description": "Capture time of the image",
-            "pattern": "[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]+",
+            "pattern": "[0-9]{4}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]{2}_[0-9]+"
         },
         "MAPCompassHeading": {
             "type": "object",
             "properties": {
                 "TrueHeading": {"type": "number"},
-                "MagneticHeading": {"type": "number"},
+                "MagneticHeading": {"type": "number"}
             },
             "required": ["TrueHeading", "MagneticHeading"],
             "additionalProperties": False,
-            "description": "Camera angle of the image, in degrees. If null, the angle will be interpolated",
+            "description": "Camera angle of the image, in degrees. If null, the angle will be interpolated"
         },
         "MAPSequenceUUID": {
             "type": "string",
             "description": "Arbitrary key for grouping images",
-            "pattern": "[a-zA-Z0-9_-]+",
+            "pattern": "[a-zA-Z0-9_-]+"
         },
         # deprecated since v0.10.0; keep here for compatibility
         "MAPMetaTags": {"type": "object"},
@@ -149,16 +149,16 @@ ImageDescriptionEXIFSchema = {
         "MAPCameraUUID": {"type": "string"},
         "MAPFilename": {
             "type": "string",
-            "description": "The base filename of the image",
+            "description": "The base filename of the image"
         },
-        "MAPOrientation": {"type": "integer"},
+        "MAPOrientation": {"type": "integer"}
     },
     "required": [
         "MAPLatitude",
         "MAPLongitude",
-        "MAPCaptureTime",
+        "MAPCaptureTime"
     ],
-    "additionalProperties": False,
+    "additionalProperties": False
 }
 
 VideoDescriptionSchema = {
@@ -172,40 +172,40 @@ VideoDescriptionSchema = {
                 "prefixItems": [
                     {
                         "type": "number",
-                        "description": "Time offset of the track point, in milliseconds, relative to the beginning of the video",
+                        "description": "Time offset of the track point, in milliseconds, relative to the beginning of the video"
                     },
                     {
                         "type": "number",
-                        "description": "Longitude of the track point",
+                        "description": "Longitude of the track point"
                     },
                     {
                         "type": "number",
-                        "description": "Latitude of the track point",
+                        "description": "Latitude of the track point"
                     },
                     {
                         "type": ["number", "null"],
-                        "description": "Altitude of the track point in meters",
+                        "description": "Altitude of the track point in meters"
                     },
                     {
                         "type": ["number", "null"],
-                        "description": "Camera angle of the track point, in degrees. If null, the angle will be interpolated",
-                    },
-                ],
-            },
+                        "description": "Camera angle of the track point, in degrees. If null, the angle will be interpolated"
+                    }
+                ]
+            }
         },
         "MAPDeviceMake": {
             "type": "string",
-            "description": "Device make, e.g. GoPro, BlackVue, Insta360",
+            "description": "Device make, e.g. GoPro, BlackVue, Insta360"
         },
         "MAPDeviceModel": {
             "type": "string",
-            "description": "Device model, e.g. HERO10 Black, DR900S-1CH, Insta360 Titan",
-        },
+            "description": "Device model, e.g. HERO10 Black, DR900S-1CH, Insta360 Titan"
+        }
     },
     "required": [
-        "MAPGPSTrack",
+        "MAPGPSTrack"
     ],
-    "additionalProperties": False,
+    "additionalProperties": False
 }
 
 
@@ -224,7 +224,7 @@ def _merge_schema(*schemas: dict) -> dict:
         "type": "object",
         "properties": properties,
         "required": sorted(set(all_required)),
-        "additionalProperties": additional_properties,
+        "additionalProperties": additional_properties
     }
 
 
@@ -235,27 +235,27 @@ ImageDescriptionFileSchema = _merge_schema(
         "properties": {
             "filename": {
                 "type": "string",
-                "description": "Absolute path of the image",
+                "description": "Absolute path of the image"
             },
             "md5sum": {
                 "type": ["string", "null"],
-                "description": "MD5 checksum of the image content. If not provided, the uploader will compute it",
+                "description": "MD5 checksum of the image content. If not provided, the uploader will compute it"
             },
             "filesize": {
                 "type": ["number", "null"],
-                "description": "File size",
+                "description": "File size"
             },
             "filetype": {
                 "type": "string",
                 "enum": [FileType.IMAGE.value],
-                "description": "The image file type",
-            },
+                "description": "The image file type"
+            }
         },
         "required": [
             "filename",
-            "filetype",
-        ],
-    },
+            "filetype"
+        ]
+    }
 )
 
 
@@ -271,15 +271,15 @@ VideoDescriptionFileSchema = _merge_schema(
         "properties": {
             "filename": {
                 "type": "string",
-                "description": "Absolute path of the video",
+                "description": "Absolute path of the video"
             },
             "md5sum": {
                 "type": ["string", "null"],
-                "description": "MD5 checksum of the video content. If not provided, the uploader will compute it",
+                "description": "MD5 checksum of the video content. If not provided, the uploader will compute it"
             },
             "filesize": {
                 "type": ["number", "null"],
-                "description": "File size",
+                "description": "File size"
             },
             "filetype": {
                 "type": "string",
@@ -287,16 +287,16 @@ VideoDescriptionFileSchema = _merge_schema(
                     FileType.CAMM.value,
                     FileType.GOPRO.value,
                     FileType.BLACKVUE.value,
-                    FileType.VIDEO.value,
+                    FileType.VIDEO.value
                 ],
-                "description": "The video file type",
-            },
+                "description": "The video file type"
+            }
         },
         "required": [
             "filename",
-            "filetype",
-        ],
-    },
+            "filetype"
+        ]
+    }
 )
 
 
@@ -361,7 +361,7 @@ class DescriptionJSONSerializer(BaseSerializer):
     ) -> ErrorDescription:
         err: _ErrorObject = {
             "type": exc.__class__.__name__,
-            "message": str(exc),
+            "message": str(exc)
         }
 
         exc_vars = vars(exc)
@@ -377,7 +377,7 @@ class DescriptionJSONSerializer(BaseSerializer):
 
         desc: ErrorDescription = {
             "error": err,
-            "filename": str(filename.resolve()),
+            "filename": str(filename.resolve())
         }
         if filetype is not None:
             desc["filetype"] = filetype.value
@@ -391,7 +391,7 @@ class DescriptionJSONSerializer(BaseSerializer):
             "md5sum": metadata.md5sum,
             "filetype": metadata.filetype.value,
             "filesize": metadata.filesize,
-            "MAPGPSTrack": [PointEncoder.encode(p) for p in metadata.points],
+            "MAPGPSTrack": [PointEncoder.encode(p) for p in metadata.points]
         }
         if metadata.make:
             desc["MAPDeviceMake"] = metadata.make
@@ -408,14 +408,14 @@ class DescriptionJSONSerializer(BaseSerializer):
             "filetype": FileType.IMAGE.value,
             "MAPLatitude": round(metadata.lat, _COORDINATES_PRECISION),
             "MAPLongitude": round(metadata.lon, _COORDINATES_PRECISION),
-            "MAPCaptureTime": build_capture_time(metadata.time),
+            "MAPCaptureTime": build_capture_time(metadata.time)
         }
         if metadata.alt is not None:
             desc["MAPAltitude"] = round(metadata.alt, _ALTITUDE_PRECISION)
         if metadata.angle is not None:
             desc["MAPCompassHeading"] = {
                 "TrueHeading": round(metadata.angle, _ANGLE_PRECISION),
-                "MagneticHeading": round(metadata.angle, _ANGLE_PRECISION),
+                "MagneticHeading": round(metadata.angle, _ANGLE_PRECISION)
             }
         fields = dataclasses.fields(metadata)
         for field in fields:
@@ -460,7 +460,7 @@ class DescriptionJSONSerializer(BaseSerializer):
                 "MAPLongitude",
                 "MAPAltitude",
                 "MAPCaptureTime",
-                "MAPCompassHeading",
+                "MAPCompassHeading"
             ]:
                 kwargs[k] = v
 
@@ -475,7 +475,7 @@ class DescriptionJSONSerializer(BaseSerializer):
             angle=desc.get("MAPCompassHeading", {}).get("TrueHeading"),
             width=None,
             height=None,
-            **kwargs,
+            **kwargs
         )
 
     @classmethod
@@ -489,7 +489,7 @@ class DescriptionJSONSerializer(BaseSerializer):
             filetype=FileType(desc["filetype"]),
             points=[PointEncoder.decode(entry) for entry in desc["MAPGPSTrack"]],
             make=desc.get("MAPDeviceMake"),
-            model=desc.get("MAPDeviceModel"),
+            model=desc.get("MAPDeviceModel")
         )
 
 
@@ -501,7 +501,7 @@ class PointEncoder:
             round(p.lon, _COORDINATES_PRECISION),
             round(p.lat, _COORDINATES_PRECISION),
             round(p.alt, _ALTITUDE_PRECISION) if p.alt is not None else None,
-            round(p.angle, _ANGLE_PRECISION) if p.angle is not None else None,
+            round(p.angle, _ANGLE_PRECISION) if p.angle is not None else None
         ]
         return entry
 
@@ -568,7 +568,7 @@ def validate_and_fail_metadata(metadata: MetadataOrError) -> MetadataOrError:
         return describe_error_metadata(
             ex,
             metadata.filename,
-            filetype=filetype,
+            filetype=filetype
         )
 
     if not metadata.filename.is_file():
@@ -577,7 +577,7 @@ def validate_and_fail_metadata(metadata: MetadataOrError) -> MetadataOrError:
                 f"No such file {metadata.filename}"
             ),
             metadata.filename,
-            filetype=filetype,
+            filetype=filetype
         )
 
     return metadata

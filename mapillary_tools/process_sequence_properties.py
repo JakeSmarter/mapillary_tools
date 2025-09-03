@@ -89,7 +89,7 @@ def duplication_check(
     sequence: PointSequence,
     *,
     max_duplicate_distance: float,
-    max_duplicate_angle: float,
+    max_duplicate_angle: float
 ) -> tuple[PointSequence, list[types.ErrorMetadata]]:
     # >>> duplication_check([], max_duplicate_distance=1, max_duplicate_angle=2)
     # ([], [])
@@ -122,7 +122,7 @@ def duplication_check(
                 msg,
                 DescriptionJSONSerializer.as_desc(cur),
                 distance=distance,
-                angle_diff=angle_diff,
+                angle_diff=angle_diff
             )
             dup = types.describe_error_metadata(
                 ex, cur.filename, filetype=types.FileType.IMAGE
@@ -139,7 +139,7 @@ def duplication_check(
 
 def _group_images_by(
     image_metadatas: T.Iterable[types.ImageMetadata],
-    group_key_func: T.Callable[[types.ImageMetadata], T.Hashable],
+    group_key_func: T.Callable[[types.ImageMetadata], T.Hashable]
 ) -> dict[T.Hashable, list[types.ImageMetadata]]:
     grouped: dict[T.Hashable, list[types.ImageMetadata]] = {}
     for metadata in image_metadatas:
@@ -179,7 +179,7 @@ def _interpolate_subsecs_for_sorting(sequence: PointSequence) -> None:
                 if gidx + len(group) < len(sequence)
                 else math.floor(t + 1.0)
             ),
-            math.floor(t + 1.0),
+            math.floor(t + 1.0)
         )
         assert t <= nt, f"expect sorted but got {t} > {nt}"
         interval = (nt - t) / len(group)
@@ -212,7 +212,7 @@ def _check_video_limits(
     video_metadatas: T.Iterable[types.VideoMetadata],
     max_sequence_filesize_in_bytes: int | None,
     max_capture_speed_kmh: float,
-    max_radius_for_stationary_check: float,
+    max_radius_for_stationary_check: float
 ) -> tuple[list[types.VideoMetadata], list[types.ErrorMetadata]]:
     output_video_metadatas: list[types.VideoMetadata] = []
     error_metadatas: list[types.ErrorMetadata] = []
@@ -221,7 +221,7 @@ def _check_video_limits(
         try:
             is_stationary = _is_video_stationary(
                 video_metadata.points,
-                max_radius_in_meters=max_radius_for_stationary_check,
+                max_radius_in_meters=max_radius_for_stationary_check
             )
             if is_stationary:
                 raise exceptions.MapillaryStationaryVideoError("Stationary video")
@@ -234,7 +234,7 @@ def _check_video_limits(
                 )
                 if video_filesize > max_sequence_filesize_in_bytes:
                     raise exceptions.MapillaryFileTooLargeError(
-                        f"Video file size {humanize.naturalsize(video_filesize)} exceeds max allowed {humanize.naturalsize(max_sequence_filesize_in_bytes)}",
+                        f"Video file size {humanize.naturalsize(video_filesize)} exceeds max allowed {humanize.naturalsize(max_sequence_filesize_in_bytes)}"
                     )
 
             contains_null_island = any(
@@ -254,7 +254,7 @@ def _check_video_limits(
             )
             if too_fast:
                 raise exceptions.MapillaryCaptureSpeedTooFastError(
-                    f"Capture speed {avg_speed_kmh:.3f} km/h exceeds max allowed {max_capture_speed_kmh:.3f} km/h",
+                    f"Capture speed {avg_speed_kmh:.3f} km/h exceeds max allowed {max_capture_speed_kmh:.3f} km/h"
                 )
         except exceptions.MapillaryDescriptionError as ex:
             LOG.error(f"{_video_name(video_metadata)}: {ex}")
@@ -262,7 +262,7 @@ def _check_video_limits(
                 types.describe_error_metadata(
                     exc=ex,
                     filename=video_metadata.filename,
-                    filetype=video_metadata.filetype,
+                    filetype=video_metadata.filetype
                 )
             )
         else:
@@ -278,7 +278,7 @@ def _video_name(video_metadata: types.VideoMetadata) -> str:
 def _check_sequences_by_limits(
     input_sequences: T.Sequence[PointSequence],
     max_sequence_filesize_in_bytes: int | None,
-    max_capture_speed_kmh: float,
+    max_capture_speed_kmh: float
 ) -> tuple[list[PointSequence], list[types.ErrorMetadata]]:
     output_sequences: list[PointSequence] = []
     output_errors: list[types.ErrorMetadata] = []
@@ -294,7 +294,7 @@ def _check_sequences_by_limits(
                 )
                 if sequence_filesize > max_sequence_filesize_in_bytes:
                     raise exceptions.MapillaryFileTooLargeError(
-                        f"Sequence file size {humanize.naturalsize(sequence_filesize)} exceeds max allowed {humanize.naturalsize(max_sequence_filesize_in_bytes)}",
+                        f"Sequence file size {humanize.naturalsize(sequence_filesize)} exceeds max allowed {humanize.naturalsize(max_sequence_filesize_in_bytes)}"
                     )
 
             contains_null_island = any(
@@ -309,7 +309,7 @@ def _check_sequences_by_limits(
             too_fast = len(sequence) >= 2 and avg_speed_kmh > max_capture_speed_kmh
             if too_fast:
                 raise exceptions.MapillaryCaptureSpeedTooFastError(
-                    f"Capture speed {avg_speed_kmh:.3f} km/h exceeds max allowed {max_capture_speed_kmh:.3f} km/h",
+                    f"Capture speed {avg_speed_kmh:.3f} km/h exceeds max allowed {max_capture_speed_kmh:.3f} km/h"
                 )
         except exceptions.MapillaryDescriptionError as ex:
             LOG.error(f"{_sequence_name(sequence)}: {ex}")
@@ -338,7 +338,7 @@ def _sequence_name(sequence: T.Sequence[types.ImageMetadata]) -> str:
 
 
 def _group_by_folder_and_camera(
-    image_metadatas: list[types.ImageMetadata],
+    image_metadatas: list[types.ImageMetadata]
 ) -> list[list[types.ImageMetadata]]:
     grouped = _group_images_by(
         image_metadatas,
@@ -347,8 +347,8 @@ def _group_by_folder_and_camera(
             metadata.MAPDeviceMake,
             metadata.MAPDeviceModel,
             metadata.width,
-            metadata.height,
-        ),
+            metadata.height
+        )
     )
     for key in grouped:
         LOG.debug(f"Grouped {len(grouped[key])} images by {key}")
@@ -362,7 +362,7 @@ def _group_by_folder_and_camera(
 def _check_sequences_duplication(
     input_sequences: T.Sequence[PointSequence],
     duplicate_distance: float,
-    duplicate_angle: float,
+    duplicate_angle: float
 ) -> tuple[list[PointSequence], list[types.ErrorMetadata]]:
     output_sequences: list[PointSequence] = []
     output_errors: list[types.ErrorMetadata] = []
@@ -371,7 +371,7 @@ def _check_sequences_duplication(
         output_sequence, errors = duplication_check(
             sequence,
             max_duplicate_distance=duplicate_distance,
-            max_duplicate_angle=duplicate_angle,
+            max_duplicate_angle=duplicate_angle
         )
         assert len(sequence) == len(output_sequence) + len(errors)
         if output_sequence:
@@ -402,7 +402,7 @@ def _should_split_by_max_sequence_images(
     state: SplitState,
     image: types.ImageMetadata,
     max_sequence_images: int,
-    split: bool = False,
+    split: bool = False
 ) -> tuple[SplitState, bool]:
     if not split:
         new_sequence_images = state.get("sequence_images", 0) + 1
@@ -424,7 +424,7 @@ def _should_split_by_cutoff_time(
     state: SplitState,
     image: types.ImageMetadata,
     cutoff_time: float,
-    split: bool = False,
+    split: bool = False
 ) -> tuple[SplitState, bool]:
     if not split:
         last_image = state.get("image")
@@ -445,7 +445,7 @@ def _should_split_by_cutoff_distance(
     state: SplitState,
     image: types.ImageMetadata,
     cutoff_distance: float,
-    split: bool = False,
+    split: bool = False
 ) -> tuple[SplitState, bool]:
     if not split:
         last_image = state.get("image")
@@ -468,7 +468,7 @@ def _should_split_by_max_sequence_filesize(
     state: SplitState,
     image: types.ImageMetadata,
     max_sequence_filesize_in_bytes: int,
-    split: bool = False,
+    split: bool = False
 ) -> tuple[SplitState, bool]:
     if image.filesize is None:
         filesize = os.path.getsize(image.filename)
@@ -495,7 +495,7 @@ def _should_split_by_max_sequence_pixels(
     state: SplitState,
     image: types.ImageMetadata,
     max_sequence_pixels: int,
-    split: bool = False,
+    split: bool = False
 ) -> tuple[SplitState, bool]:
     # Default values if width/height not available
     width = 1024 if image.width is None else image.width
@@ -524,7 +524,7 @@ def _split_sequences_by_limits(
     max_sequence_pixels: int | None = None,
     max_sequence_images: int | None = None,
     cutoff_time: float | None = None,
-    cutoff_distance: float | None = None,
+    cutoff_distance: float | None = None
 ) -> list[PointSequence]:
     should_splits = []
 
@@ -532,7 +532,7 @@ def _split_sequences_by_limits(
         should_splits.append(
             functools.partial(
                 _should_split_by_max_sequence_images,
-                max_sequence_images=max_sequence_images,
+                max_sequence_images=max_sequence_images
             )
         )
 
@@ -552,7 +552,7 @@ def _split_sequences_by_limits(
         should_splits.append(
             functools.partial(
                 _should_split_by_max_sequence_filesize,
-                max_sequence_filesize_in_bytes=max_sequence_filesize_in_bytes,
+                max_sequence_filesize_in_bytes=max_sequence_filesize_in_bytes
             )
         )
 
@@ -560,7 +560,7 @@ def _split_sequences_by_limits(
         should_splits.append(
             functools.partial(
                 _should_split_by_max_sequence_pixels,
-                max_sequence_pixels=max_sequence_pixels,
+                max_sequence_pixels=max_sequence_pixels
             )
         )
 
@@ -597,7 +597,7 @@ def process_sequence_properties(
     interpolate_directions: bool = False,
     duplicate_distance: float = constants.DUPLICATE_DISTANCE,
     duplicate_angle: float = constants.DUPLICATE_ANGLE,
-    max_capture_speed_kmh: float = constants.MAX_CAPTURE_SPEED_KMH,
+    max_capture_speed_kmh: float = constants.MAX_CAPTURE_SPEED_KMH
 ) -> list[types.MetadataOrError]:
     LOG.info("==> Processing sequences...")
 
@@ -624,7 +624,7 @@ def process_sequence_properties(
             video_metadatas,
             max_sequence_filesize_in_bytes=max_sequence_filesize_in_bytes,
             max_capture_speed_kmh=max_capture_speed_kmh,
-            max_radius_for_stationary_check=10.0,
+            max_radius_for_stationary_check=10.0
         )
         error_metadatas.extend(video_error_metadatas)
 
@@ -637,7 +637,7 @@ def process_sequence_properties(
         # Make sure each sequence is sorted (in-place update)
         for sequence in sequences:
             sequence.sort(
-                key=lambda metadata: metadata.sort_key(),
+                key=lambda metadata: metadata.sort_key()
             )
 
         # Interpolate subseconds for same timestamps (in-place update)
@@ -651,14 +651,14 @@ def process_sequence_properties(
             max_sequence_filesize_in_bytes=max_sequence_filesize_in_bytes,
             max_sequence_pixels=max_sequence_pixels,
             max_sequence_images=constants.MAX_SEQUENCE_LENGTH,
-            cutoff_time=cutoff_time,
+            cutoff_time=cutoff_time
         )
 
         # Duplication check
         sequences, errors = _check_sequences_duplication(
             sequences,
             duplicate_distance=duplicate_distance,
-            duplicate_angle=duplicate_angle,
+            duplicate_angle=duplicate_angle
         )
         error_metadatas.extend(errors)
 
@@ -673,7 +673,7 @@ def process_sequence_properties(
         sequences, errors = _check_sequences_by_limits(
             sequences,
             max_sequence_filesize_in_bytes=max_sequence_filesize_in_bytes,
-            max_capture_speed_kmh=max_capture_speed_kmh,
+            max_capture_speed_kmh=max_capture_speed_kmh
         )
         error_metadatas.extend(errors)
 

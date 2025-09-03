@@ -16,13 +16,13 @@ class Command:
             "--user_email",
             help="User email, used to create Mapillary account",
             default=None,
-            required=False,
+            required=False
         )
         parser.add_argument(
             "--user_password",
             help="Password associated with the Mapillary user account",
             default=None,
-            required=False,
+            required=False
         )
         parser.add_argument(
             "--jwt", help="Mapillary user access token", default=None, required=False
@@ -32,7 +32,7 @@ class Command:
             help="Delete the specified user profile",
             default=False,
             required=False,
-            action="store_true",
+            action="store_true"
         )
 
     def run(self, vars_args: dict):

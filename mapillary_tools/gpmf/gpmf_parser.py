@@ -76,7 +76,7 @@ _type_mapping = {
     # S	16-bit unsigned integer	uint16_t	0 to 65536
     b"S": (C.Int16ub, 2),
     # U	UTC Date and Time string	char utcdate[16]	Date + UTC Time format yymmddhhmmss.sss - (years 20xx covered)
-    b"U": (C.Bytes(16), 16),
+    b"U": (C.Bytes(16), 16)
 }
 
 
@@ -96,10 +96,10 @@ _klv_data_switch = C.Switch(
         # null      Nested metadata uint32_t        The data within is GPMF structured KLV data
         b"\x00": C.FixedSized(
             (C.this.repeat * C.this.structure_size),
-            C.LazyBound(lambda: GPMFSampleData),
-        ),
+            C.LazyBound(lambda: GPMFSampleData)
+        )
     },
-    C.Array(C.this.repeat, C.Bytes(C.this.structure_size)),
+    C.Array(C.this.repeat, C.Bytes(C.this.structure_size))
 )
 
 
@@ -119,8 +119,8 @@ KLV = C.Struct(
     C.IfThenElse(
         (C.this.repeat * C.this.structure_size) % 4 == 0,
         C.Padding(0),
-        C.Padding(4 - (C.this.repeat * C.this.structure_size) % 4),
-    ),
+        C.Padding(4 - (C.this.repeat * C.this.structure_size) % 4)
+    )
 )
 
 
@@ -169,7 +169,7 @@ def extract_gopro_info(
                 accls_by_dvid=accls_by_dvid,
                 gyros_by_dvid=gyros_by_dvid,
                 magns_by_dvid=magns_by_dvid,
-                dvnm_by_dvid=dvnm_by_dvid,
+                dvnm_by_dvid=dvnm_by_dvid
             )
             # If no device found, it's likely some other cameras using
             # the "gpmd" container format, e.g. VANTRUE N2S 4K Dashcam
@@ -270,7 +270,7 @@ def _gps5_timestamp_to_epoch_time(dtstr: str):
 #                 [378081662, -1224280049, 9592, 1476, 150],
 #             ]
 def _gps5_from_stream(
-    stream: T.Sequence[KLVDict],
+    stream: T.Sequence[KLVDict]
 ) -> T.Generator[telemetry.GPSPoint, None, None]:
     indexed: dict[bytes, list[list[T.Any]]] = {
         klv["key"]: klv["data"] for klv in stream
@@ -323,7 +323,7 @@ def _gps5_from_stream(
             fix=gpsf_value,
             precision=gpsp_value,
             ground_speed=ground_speed,
-            angle=None,
+            angle=None
         )
 
 
@@ -354,7 +354,7 @@ def _get_gps_type(input) -> bytes:
 
 
 def _gps9_from_stream(
-    stream: T.Sequence[KLVDict],
+    stream: T.Sequence[KLVDict]
 ) -> T.Generator[telemetry.GPSPoint, None, None]:
     NUM_VALUES = 9
 
@@ -405,7 +405,7 @@ def _gps9_from_stream(
             days_since_2000,
             secs_since_midnight,
             dop,
-            gps_fix,
+            gps_fix
         ) = [v / s for v, s in zip(sample_data, scal_values)]
 
         epoch_time = _gps9_timestamp_to_epoch_time(days_since_2000, secs_since_midnight)
@@ -420,7 +420,7 @@ def _gps9_from_stream(
             fix=telemetry.GPSFix(gps_fix),
             precision=dop * 100,
             ground_speed=speed_2d,
-            angle=None,
+            angle=None
         )
 
 
@@ -598,7 +598,7 @@ def _load_telemetry_from_samples(
     accls_by_dvid: dict[int, list[telemetry.AccelerationData]] | None = None,
     gyros_by_dvid: dict[int, list[telemetry.GyroscopeData]] | None = None,
     magns_by_dvid: dict[int, list[telemetry.MagnetometerData]] | None = None,
-    dvnm_by_dvid: dict[int, bytes] | None = None,
+    dvnm_by_dvid: dict[int, bytes] | None = None
 ) -> bool:
     device_found: bool = False
 
@@ -642,7 +642,7 @@ def _load_telemetry_from_samples(
                             time=sample.exact_time + avg_delta * idx,
                             x=x,
                             y=y,
-                            z=z,
+                            z=z
                         )
                         for idx, (z, x, y, *_) in enumerate(sample_accls)
                     )
@@ -657,7 +657,7 @@ def _load_telemetry_from_samples(
                             time=sample.exact_time + avg_delta * idx,
                             x=x,
                             y=y,
-                            z=z,
+                            z=z
                         )
                         for idx, (z, x, y, *_) in enumerate(sample_gyros)
                     )
@@ -672,7 +672,7 @@ def _load_telemetry_from_samples(
                             time=sample.exact_time + avg_delta * idx,
                             x=x,
                             y=y,
-                            z=z,
+                            z=z
                         )
                         for idx, (z, x, y, *_) in enumerate(sample_magns)
                     )

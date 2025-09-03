@@ -112,7 +112,7 @@ class GeotagVideosFromExifToolRunner(GeotagVideosFromGeneric):
         LOG.debug(
             "Extracting XML from %d videos with ExifTool command: %s",
             len(video_paths),
-            " ".join(runner._build_args_read_stdin()),
+            " ".join(runner._build_args_read_stdin())
         )
         try:
             xml = runner.extract_xml(video_paths)
@@ -131,7 +131,7 @@ class GeotagVideosFromExifToolRunner(GeotagVideosFromGeneric):
             LOG.warning(
                 "Failed to parse ExifTool XML: %s",
                 str(ex),
-                exc_info=LOG.isEnabledFor(logging.DEBUG),
+                exc_info=LOG.isEnabledFor(logging.DEBUG)
             )
             rdf_by_path = {}
         else:

@@ -61,7 +61,7 @@ class GPXVideoExtractor(BaseVideoExtractor):
                 filename=self.video_path,
                 filesize=utils.get_file_size(self.video_path),
                 filetype=types.FileType.VIDEO,
-                points=gpx_points,
+                points=gpx_points
             )
 
         if self.sync_mode is SyncMode.REBASE:

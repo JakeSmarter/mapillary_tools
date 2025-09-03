@@ -74,7 +74,7 @@ class GeotagImagesFromExifToolRunner(GeotagImagesFromGeneric):
         LOG.debug(
             "Extracting XML from %d images with ExifTool command: %s",
             len(image_paths),
-            " ".join(runner._build_args_read_stdin()),
+            " ".join(runner._build_args_read_stdin())
         )
         try:
             xml = runner.extract_xml(image_paths)
@@ -93,7 +93,7 @@ class GeotagImagesFromExifToolRunner(GeotagImagesFromGeneric):
             LOG.warning(
                 "Failed to parse ExifTool XML: %s",
                 str(ex),
-                exc_info=LOG.isEnabledFor(logging.DEBUG),
+                exc_info=LOG.isEnabledFor(logging.DEBUG)
             )
             rdf_by_path = {}
         else:
@@ -111,7 +111,7 @@ class GeotagImagesFromExifToolWithSamples(GeotagImagesFromGeneric):
         self,
         source_path: options.SourcePathOption,
         offset_time: float = 0.0,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         self.source_path = source_path
@@ -126,7 +126,7 @@ class GeotagImagesFromExifToolWithSamples(GeotagImagesFromGeneric):
         )
         video_paths = utils.find_videos(
             [Path(canonical_path) for canonical_path in rdf_by_path.keys()],
-            skip_subfolders=True,
+            skip_subfolders=True
         )
         # Find all video paths that have sample images
         samples_by_video = utils.find_all_image_samples(image_paths, video_paths)
@@ -138,7 +138,7 @@ class GeotagImagesFromExifToolWithSamples(GeotagImagesFromGeneric):
         sample_metadata_or_errors = GeotagImagesFromVideo(
             video_metadata_or_errors,
             offset_time=self.offset_time,
-            num_processes=self.num_processes,
+            num_processes=self.num_processes
         ).to_description(sample_paths)
 
         return sample_metadata_or_errors

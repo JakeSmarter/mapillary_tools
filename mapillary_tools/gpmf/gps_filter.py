@@ -43,7 +43,7 @@ def upper_whisker(values: T.Sequence[float]) -> float:
 
 def split_if(
     points: PointSequence,
-    split_or_not: Decider,
+    split_or_not: Decider
 ) -> T.List[PointSequence]:
     if not points:
         return []
@@ -60,7 +60,7 @@ def split_if(
 
 
 def distance_gt(
-    max_distance: float,
+    max_distance: float
 ) -> Decider:
     # Return a callable that checks if two points are farther than the given distance.
 
@@ -83,7 +83,7 @@ def speed_le(max_speed: float) -> Decider:
 
 def both(
     s1: Decider,
-    s2: Decider,
+    s2: Decider
 ) -> Decider:
     def _f(p1, p2):
         return s1(p1, p2) and s2(p1, p2)
@@ -93,7 +93,7 @@ def both(
 
 def dbscan(
     sequences: T.Sequence[PointSequence],
-    merge_or_not: Decider,
+    merge_or_not: Decider
 ) -> dict[int, PointSequence]:
     # One-dimension DBSCAN clustering: https://en.wikipedia.org/wiki/DBSCAN
     # The input is a list of sequences, and it is guaranteed that all sequences are sorted by time.

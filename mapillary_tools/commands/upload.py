@@ -15,27 +15,27 @@ class Command:
         group.add_argument(
             "--user_name",
             help="The Mapillary user account to upload to.",
-            required=False,
+            required=False
         )
         group.add_argument(
             "--organization_key",
             help="The Mapillary organization ID to upload to.",
             default=None,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--num_upload_workers",
             help="Number of concurrent upload workers for uploading images. [default: %(default)s]",
             default=constants.MAX_IMAGE_UPLOAD_WORKERS,
             type=int,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--reupload",
             help="Re-upload data that has already been uploaded.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--dry_run",
@@ -43,21 +43,21 @@ class Command:
             help="[DEVELOPMENT] Simulate upload by sending data to a local directory instead of Mapillary servers. Uses a temporary directory by default unless specified by MAPILLARY_UPLOAD_ENDPOINT environment variable.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--nofinish",
             help="[DEVELOPMENT] Upload data without finalizing. The data will NOT be stored permanently or appear on the Mapillary website.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--noresume",
             help="[DEVELOPMENT] Start upload from the beginning, ignoring any previously interrupted upload sessions.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
 
     def add_basic_arguments(self, parser):
@@ -66,7 +66,7 @@ class Command:
             "--desc_path",
             help=f'Path to the description file with processed image and video metadata (from process command). Use "-" for STDIN. [default: {{IMPORT_PATH}}/{constants.IMAGE_DESCRIPTION_FILENAME}]',
             default=None,
-            required=False,
+            required=False
         )
         Command.add_common_upload_options(group)
 

@@ -23,7 +23,7 @@ _Double = C.Float64l
 
 TelemetryMeasurement = T.Union[
     geo.Point,
-    telemetry.TimestampedMeasurement,
+    telemetry.TimestampedMeasurement
 ]
 
 
@@ -174,7 +174,7 @@ class MinGPSSampleEntry(CAMMSampleEntry):
             lat=data[0],
             lon=data[1],
             alt=data[2],
-            angle=None,
+            angle=None
         )
 
     @classmethod
@@ -187,8 +187,8 @@ class MinGPSSampleEntry(CAMMSampleEntry):
                 "data": [
                     data.lat,
                     data.lon,
-                    -1.0 if data.alt is None else data.alt,
-                ],
+                    -1.0 if data.alt is None else data.alt
+                ]
             }
         )
 
@@ -227,7 +227,7 @@ class GPSSampleEntry(CAMMSampleEntry):
             velocity_east=data.velocity_east,
             velocity_north=data.velocity_north,
             velocity_up=data.velocity_up,
-            speed_accuracy=data.speed_accuracy,
+            speed_accuracy=data.speed_accuracy
         )
 
     @classmethod
@@ -248,8 +248,8 @@ class GPSSampleEntry(CAMMSampleEntry):
                     "velocity_east": data.velocity_east,
                     "velocity_north": data.velocity_north,
                     "velocity_up": data.velocity_up,
-                    "speed_accuracy": data.speed_accuracy,
-                },
+                    "speed_accuracy": data.speed_accuracy
+                }
             }
         )
 
@@ -275,8 +275,8 @@ class GoProGPSSampleEntry(CAMMSampleEntry):
                 "data": [
                     data.lat,
                     data.lon,
-                    -1.0 if data.alt is None else data.alt,
-                ],
+                    -1.0 if data.alt is None else data.alt
+                ]
             }
         )
 
@@ -294,7 +294,7 @@ class AccelerationSampleEntry(CAMMSampleEntry):
             time=sample.exact_time,
             x=data[0],
             y=data[1],
-            z=data[2],
+            z=data[2]
         )
 
     @classmethod
@@ -304,7 +304,7 @@ class AccelerationSampleEntry(CAMMSampleEntry):
         return CAMMSampleData.build(
             {
                 "type": cls.serialized_camm_type.value,
-                "data": [data.x, data.y, data.z],
+                "data": [data.x, data.y, data.z]
             }
         )
 
@@ -322,7 +322,7 @@ class GyroscopeSampleEntry(CAMMSampleEntry):
             time=sample.exact_time,
             x=data[0],
             y=data[1],
-            z=data[2],
+            z=data[2]
         )
 
     @classmethod
@@ -332,7 +332,7 @@ class GyroscopeSampleEntry(CAMMSampleEntry):
         return CAMMSampleData.build(
             {
                 "type": cls.serialized_camm_type.value,
-                "data": [data.x, data.y, data.z],
+                "data": [data.x, data.y, data.z]
             }
         )
 
@@ -350,7 +350,7 @@ class MagnetometerSampleEntry(CAMMSampleEntry):
             time=sample.exact_time,
             x=data[0],
             y=data[1],
-            z=data[2],
+            z=data[2]
         )
 
     @classmethod
@@ -360,7 +360,7 @@ class MagnetometerSampleEntry(CAMMSampleEntry):
         return CAMMSampleData.build(
             {
                 "type": cls.serialized_camm_type.value,
-                "data": [data.x, data.y, data.z],
+                "data": [data.x, data.y, data.z]
             }
         )
 
@@ -384,12 +384,12 @@ _SWITCH: dict[int, C.Struct] = {
     # Position
     CAMMType.POSITION.value: _Float[3],  # type: ignore
     # Serializable types
-    **{t.value: cls.construct for t, cls in SAMPLE_ENTRY_CLS_BY_CAMM_TYPE.items()},
+    **{t.value: cls.construct for t, cls in SAMPLE_ENTRY_CLS_BY_CAMM_TYPE.items()}
 }
 
 
 def _construct_with_selected_camm_types(
-    selected_camm_types: T.Container[CAMMType] | None = None,
+    selected_camm_types: T.Container[CAMMType] | None = None
 ) -> C.Struct:
     if selected_camm_types is None:
         switch = _SWITCH
@@ -401,7 +401,7 @@ def _construct_with_selected_camm_types(
     return C.Struct(
         C.Padding(2),
         "type" / C.Int16ul,
-        "data" / C.Switch(C.this.type, switch),
+        "data" / C.Switch(C.this.type, switch)
     )
 
 
@@ -411,7 +411,7 @@ CAMMSampleData = _construct_with_selected_camm_types()
 def _parse_telemetry_from_sample(
     fp: T.BinaryIO,
     sample: Sample,
-    construct: C.Struct | None = None,
+    construct: C.Struct | None = None
 ) -> TelemetryMeasurement | None:
     if construct is None:
         construct = CAMMSampleData
@@ -436,7 +436,7 @@ def _parse_telemetry_from_sample(
 
 def _filter_telemetry_by_elst_segments(
     measurements: T.Iterable[TelemetryMeasurement],
-    elst: T.Sequence[tuple[float, float]],
+    elst: T.Sequence[tuple[float, float]]
 ) -> T.Generator[TelemetryMeasurement, None, None]:
     empty_elst = [entry for entry in elst if entry[0] == -1]
     if empty_elst:
@@ -489,7 +489,7 @@ def _contains_camm_description(track: TrackBoxParser) -> bool:
 def _filter_telemetry_by_track_elst(
     moov: MovieBoxParser,
     track: TrackBoxParser,
-    measurements: T.Iterable[TelemetryMeasurement],
+    measurements: T.Iterable[TelemetryMeasurement]
 ) -> list[TelemetryMeasurement]:
     elst_boxdata = track.extract_elst_boxdata()
 
@@ -508,7 +508,7 @@ def _filter_telemetry_by_track_elst(
                 elst_entry_to_seconds(
                     entry,
                     movie_timescale=movie_timescale,
-                    media_timescale=media_timescale,
+                    media_timescale=media_timescale
                 )
                 for entry in elst_entries
             ]
@@ -521,7 +521,7 @@ def _filter_telemetry_by_track_elst(
 _MakeOrModel = C.Struct(
     "size" / C.Int16ub,
     C.Padding(2),
-    "data" / C.FixedSized(C.this.size, C.GreedyBytes),
+    "data" / C.FixedSized(C.this.size, C.GreedyBytes)
 )
 
 
@@ -547,7 +547,7 @@ def _parse_quietly(data: bytes, type: bytes) -> bytes:
 
 
 def _extract_camera_make_and_model_from_utda_boxdata(
-    utda_boxdata: dict,
+    utda_boxdata: dict
 ) -> tuple[str, str]:
     make: str = ""
     model: str = ""

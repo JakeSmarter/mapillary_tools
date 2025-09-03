@@ -30,7 +30,7 @@ def is_image_file(path: Path) -> bool:
         ".tif",
         ".tiff",
         ".pgm",
-        ".pnm",
+        ".pnm"
     )
 
 
@@ -50,7 +50,7 @@ def is_video_file(path: Path) -> bool:
         ".qt",
         ".mkv",
         # GoPro Max video filename extension
-        ".360",
+        ".360"
     )
 
 
@@ -72,7 +72,7 @@ def iterate_files(
 def filter_video_samples(
     image_paths: T.Sequence[Path],
     video_filename_or_dir: Path,
-    skip_subfolders: bool = False,
+    skip_subfolders: bool = False
 ) -> T.Generator[Path, None, None]:
     if video_filename_or_dir.is_dir():
         video_paths = list(
@@ -125,7 +125,7 @@ def deduplicate_paths(paths: T.Iterable[Path]) -> T.Generator[Path, None, None]:
 
 def find_images(
     import_paths: T.Iterable[Path],
-    skip_subfolders: bool = False,
+    skip_subfolders: bool = False
 ) -> list[Path]:
     image_paths: list[Path] = []
     for path in import_paths:
@@ -143,7 +143,7 @@ def find_images(
 
 def find_videos(
     import_paths: T.Iterable[Path],
-    skip_subfolders: bool = False,
+    skip_subfolders: bool = False
 ) -> list[Path]:
     video_paths: list[Path] = []
     for path in import_paths:
@@ -161,7 +161,7 @@ def find_videos(
 
 def find_zipfiles(
     import_paths: T.Iterable[Path],
-    skip_subfolders: bool = False,
+    skip_subfolders: bool = False
 ) -> list[Path]:
     zip_paths: list[Path] = []
     for path in import_paths:
@@ -213,7 +213,7 @@ TMapOut = T.TypeVar("TMapOut")
 def mp_map_maybe(
     func: T.Callable[[TMapIn], TMapOut],
     iterable: T.Iterable[TMapIn],
-    num_processes: int | None = None,
+    num_processes: int | None = None
 ) -> T.Generator[TMapOut, None, None]:
     if num_processes is None:
         max_workers = None
@@ -229,7 +229,7 @@ def mp_map_maybe(
         with concurrent.futures.ProcessPoolExecutor(
             max_workers=max_workers,
             initializer=configure_logger,
-            initargs=(None, app_logger.getEffectiveLevel()),
+            initargs=(None, app_logger.getEffectiveLevel())
         ) as executor:
             yield from executor.map(func, iterable)
 
@@ -252,7 +252,7 @@ def configure_logger(
     except ImportError:
         formatter = logging.Formatter(
             "%(asctime)s.%(msecs)03d - %(levelname)-7s - %(message)s",
-            datefmt="%H:%M:%S",
+            datefmt="%H:%M:%S"
         )
         handler: logging.Handler = logging.StreamHandler()
         handler.setFormatter(formatter)

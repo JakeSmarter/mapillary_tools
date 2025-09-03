@@ -32,7 +32,7 @@ def _write(obj):
 def send(type, payload):
     obj = {
         "type": type,
-        "payload": payload,
+        "payload": payload
     }
     try:
         _write(obj)

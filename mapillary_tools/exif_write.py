@@ -82,7 +82,7 @@ class ExifEdit:
             (dt.hour, 1),
             (dt.minute, 1),
             # num / den = (dt.second * 1e6 + dt.microsecond) / 1e6
-            (int(dt.second * 1e6 + dt.microsecond), int(1e6)),
+            (int(dt.second * 1e6 + dt.microsecond), int(1e6))
         )
 
     def add_lat_lon(self, lat: float, lon: float, precision: float = 1e7) -> None:
@@ -101,7 +101,7 @@ class ExifEdit:
         ref = 0 if altitude > 0 else 1
         self._ef["GPS"][piexif.GPSIFD.GPSAltitude] = (
             int(abs(altitude) * precision),
-            precision,
+            precision
         )
         self._ef["GPS"][piexif.GPSIFD.GPSAltitudeRef] = ref
 
@@ -113,7 +113,7 @@ class ExifEdit:
         direction = direction % 360.0
         self._ef["GPS"][piexif.GPSIFD.GPSImgDirection] = (
             int(abs(direction) * precision),
-            precision,
+            precision
         )
         self._ef["GPS"][piexif.GPSIFD.GPSImgDirectionRef] = ref
 
@@ -141,7 +141,7 @@ class ExifEdit:
             piexif.GPSIFD.GPSLongitude,
             piexif.GPSIFD.GPSLongitudeRef,
             piexif.ImageIFD.ImageDescription,
-            piexif.ImageIFD.Orientation,
+            piexif.ImageIFD.Orientation
         ]
 
         thumbnail_removed = False
@@ -154,7 +154,7 @@ class ExifEdit:
                     raise exc
                 LOG.debug(
                     "InvalidImageDataError on dumping -- removing thumbnail and 1st: %s",
-                    exc,
+                    exc
                 )
                 # workaround: https://github.com/hMatoba/Piexif/issues/30
                 del self._ef["thumbnail"]

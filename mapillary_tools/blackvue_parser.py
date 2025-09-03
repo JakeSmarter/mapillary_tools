@@ -24,7 +24,7 @@ NMEA_LINE_REGEX = re.compile(
     (\[\d+\])? # Strange timestamp
     \s*$
     """,
-    re.X,
+    re.X
 )
 
 
@@ -162,7 +162,7 @@ def _parse_gps_box(gps_data: bytes) -> list[geo.Point]:
                 lat=message.latitude,
                 lon=message.longitude,
                 alt=message.altitude,
-                angle=None,
+                angle=None
             )
             points_by_sentence_type.setdefault(message.sentence_type, []).append(point)
 
@@ -174,7 +174,7 @@ def _parse_gps_box(gps_data: bytes) -> list[geo.Point]:
                 lat=message.latitude,
                 lon=message.longitude,
                 alt=None,
-                angle=None,
+                angle=None
             )
             points_by_sentence_type.setdefault(message.sentence_type, []).append(point)
 

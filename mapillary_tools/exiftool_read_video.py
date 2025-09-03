@@ -21,7 +21,7 @@ EXIFTOOL_NAMESPACES: dict[str, str] = {
     **{
         f"Track{track_id}": f"http://ns.exiftool.org/QuickTime/Track{track_id}/1.0/"
         for track_id in range(1, MAX_TRACK_ID + 1)
-    },
+    }
 }
 LOG = logging.getLogger(__name__)
 _FIELD_TYPE = T.TypeVar("_FIELD_TYPE", int, float, str, T.List[str])
@@ -51,7 +51,7 @@ def _index_text_by_tag(elements: T.Iterable[ET.Element]) -> dict[str, list[str]]
 def _extract_alternative_fields(
     texts_by_tag: dict[str, list[str]],
     fields: T.Sequence[str],
-    field_type: T.Type[_FIELD_TYPE],
+    field_type: T.Type[_FIELD_TYPE]
 ) -> _FIELD_TYPE | None:
     for field in fields:
         values = texts_by_tag.get(expand_tag(field))
@@ -114,7 +114,7 @@ def _aggregate_gps_track(
     alt_tag: str | None = None,
     gps_time_tag: str | None = None,
     direction_tag: str | None = None,
-    ground_speed_tag: str | None = None,
+    ground_speed_tag: str | None = None
 ) -> list[GPSPoint]:
     # Aggregate all GPS data by the tags.
     # It requires lat, lon to be present, and their lengths must match.
@@ -136,7 +136,7 @@ def _aggregate_gps_track(
         LOG.warning(
             "Found different number of longitudes %d and latitudes %d",
             len(lons),
-            len(lats),
+            len(lats)
         )
         return []
 
@@ -155,7 +155,7 @@ def _aggregate_gps_track(
             LOG.warning(
                 "Found different number of timestamps %d and coordinates %d",
                 len(timestamps),
-                expected_length,
+                expected_length
             )
             return []
     else:
@@ -164,7 +164,7 @@ def _aggregate_gps_track(
     assert len(timestamps) == expected_length
 
     def _aggregate_float_values_same_length(
-        tag: str | None,
+        tag: str | None
     ) -> list[float | None]:
         if tag is not None:
             vals = [
@@ -203,7 +203,7 @@ def _aggregate_gps_track(
         lats,
         alts,
         directions,
-        ground_speeds,
+        ground_speeds
     ):
         if timestamp is None or lon is None or lat is None:
             continue
@@ -217,7 +217,7 @@ def _aggregate_gps_track(
             epoch_time=epoch_time,
             fix=None,
             precision=None,
-            ground_speed=ground_speed,
+            ground_speed=ground_speed
         )
 
         if not track or not _same_gps_point(track[-1], point):
@@ -239,7 +239,7 @@ def _aggregate_gps_track(
 def _aggregate_samples(
     elements: T.Iterable[ET.Element],
     sample_time_tag: str,
-    sample_duration_tag: str,
+    sample_duration_tag: str
 ) -> T.Generator[tuple[float, float, list[ET.Element]], None, None]:
     expanded_sample_time_tag = expand_tag(sample_time_tag)
     expanded_sample_duration_tag = expand_tag(sample_duration_tag)
@@ -270,7 +270,7 @@ def _aggregate_gps_track_by_sample_time(
     direction_tag: str | None = None,
     ground_speed_tag: str | None = None,
     gps_fix_tag: str | None = None,
-    gps_precision_tag: str | None = None,
+    gps_precision_tag: str | None = None
 ) -> list[GPSPoint]:
     track: list[GPSPoint] = []
 
@@ -314,7 +314,7 @@ def _aggregate_gps_track_by_sample_time(
             lat_tag=lat_tag,
             alt_tag=alt_tag,
             direction_tag=direction_tag,
-            ground_speed_tag=ground_speed_tag,
+            ground_speed_tag=ground_speed_tag
         )
         if points:
             avg_timedelta = sample_duration / len(points)
@@ -333,7 +333,7 @@ def _aggregate_gps_track_by_sample_time(
 class ExifToolReadVideo:
     def __init__(
         self,
-        etree: ET.ElementTree,
+        etree: ET.ElementTree
     ) -> None:
         self.etree = etree
         root = self.etree.getroot()
@@ -411,13 +411,13 @@ class ExifToolReadVideo:
                     expand_tag(f"{track_ns}:SampleTime"),
                     expand_tag(f"{track_ns}:SampleDuration"),
                     expand_tag(f"{track_ns}:GPSLongitude"),
-                    expand_tag(f"{track_ns}:GPSLatitude"),
+                    expand_tag(f"{track_ns}:GPSLatitude")
                 }
             ):
                 sample_iterator = _aggregate_samples(
                     root,
                     f"{track_ns}:SampleTime",
-                    f"{track_ns}:SampleDuration",
+                    f"{track_ns}:SampleDuration"
                 )
                 track = _aggregate_gps_track_by_sample_time(
                     sample_iterator,
@@ -427,7 +427,7 @@ class ExifToolReadVideo:
                     direction_tag=f"{track_ns}:GPSTrack",
                     ground_speed_tag=f"{track_ns}:GPSSpeed",
                     gps_fix_tag=f"{track_ns}:GPSMeasureMode",
-                    gps_precision_tag=f"{track_ns}:GPSHPositioningError",
+                    gps_precision_tag=f"{track_ns}:GPSHPositioningError"
                 )
                 if track:
                     return track
@@ -436,7 +436,7 @@ class ExifToolReadVideo:
     def _extract_alternative_fields(
         self,
         fields: T.Sequence[str],
-        field_type: T.Type[_FIELD_TYPE],
+        field_type: T.Type[_FIELD_TYPE]
     ) -> _FIELD_TYPE | None:
         return _extract_alternative_fields(self._texts_by_tag, fields, field_type)
 
@@ -450,7 +450,7 @@ class ExifToolReadVideo:
             {
                 expand_tag(f"{namespace}:GPSDateTime"),
                 expand_tag(f"{namespace}:GPSLongitude"),
-                expand_tag(f"{namespace}:GPSLatitude"),
+                expand_tag(f"{namespace}:GPSLatitude")
             }
         ):
             return []
@@ -461,5 +461,5 @@ class ExifToolReadVideo:
             lon_tag=f"{namespace}:GPSLongitude",
             lat_tag=f"{namespace}:GPSLatitude",
             alt_tag=f"{namespace}:GPSAltitude",
-            direction_tag=f"{namespace}:GPSTrack",
+            direction_tag=f"{namespace}:GPSTrack"
         )

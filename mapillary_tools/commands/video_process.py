@@ -24,7 +24,7 @@ class Command:
             LOG.warning(
                 'Force the option "%s" to be "%s" to avoid processing and uploading both the video samples and the videos themselves',
                 option,
-                FileType.IMAGE.value,
+                FileType.IMAGE.value
             )
             args[option] = {FileType.IMAGE}
 

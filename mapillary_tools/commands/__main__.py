@@ -17,7 +17,7 @@ from . import (
     upload,
     video_process,
     video_process_and_upload,
-    zip,
+    zip
 )
 
 mapillary_tools_commands = [
@@ -28,7 +28,7 @@ mapillary_tools_commands = [
     authenticate,
     process_and_upload,
     video_process_and_upload,
-    zip,
+    zip
 ]
 
 
@@ -42,41 +42,41 @@ def add_general_arguments(parser, command):
         parser.add_argument(
             "video_import_path",
             help="Path to a video or directory with one or more video files.",
-            type=Path,
+            type=Path
         )
         parser.add_argument(
             "import_path",
             help=f"Path to where the images from video sampling will be saved. [default: {{VIDEO_IMPORT_PATH}}/{constants.SAMPLED_VIDEO_FRAMES_FILENAME}]",
             nargs="?",
-            type=Path,
+            type=Path
         )
         parser.add_argument(
             "--skip_subfolders",
             help="Skip all subfolders and import only the images in the given VIDEO_IMPORT_PATH.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
     elif command in ["upload"]:
         parser.add_argument(
             "import_path",
             help="Paths to your images or videos.",
             nargs="+",
-            type=Path,
+            type=Path
         )
     elif command in ["process", "process_and_upload"]:
         parser.add_argument(
             "import_path",
             help="Paths to your images or videos.",
             nargs="+",
-            type=Path,
+            type=Path
         )
         parser.add_argument(
             "--skip_subfolders",
             help="Skip all subfolders and import only the images in the given IMPORT_PATH.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
 
 
@@ -114,27 +114,27 @@ def main():
     version_text = f"mapillary_tools version {VERSION}"
 
     parser = argparse.ArgumentParser(
-        "mapillary_tool",
+        "mapillary_tool"
     )
     parser.add_argument(
         "--version",
         help="show the version of mapillary tools and exit",
         action="version",
-        version=version_text,
+        version=version_text
     )
     parser.add_argument(
         "--verbose",
         help="show verbose",
         action="store_true",
         default=False,
-        required=False,
+        required=False
     )
     parser.set_defaults(func=lambda _: parser.print_help())
 
     all_commands = [module.Command() for module in mapillary_tools_commands]
 
     subparsers = parser.add_subparsers(
-        description="please choose one of the available subcommands",
+        description="please choose one of the available subcommands"
     )
     for command in all_commands:
         cmd_parser = subparsers.add_parser(

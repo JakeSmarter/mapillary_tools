@@ -23,7 +23,7 @@ XMP_NAMESPACES = {
     "xmp": "http://ns.adobe.com/xap/1.0/",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
     "x": "adobe:ns:meta/",
-    "GPano": "http://ns.google.com/photos/1.0/panorama/",
+    "GPano": "http://ns.google.com/photos/1.0/panorama/"
 }
 # https://github.com/ianare/exif-py/issues/167
 EXIFREAD_LOG = logging.getLogger("exifread")
@@ -131,7 +131,7 @@ def parse_timestr_as_timedelta(timestr: str) -> datetime.timedelta | None:
 
 
 def parse_time_ratios_as_timedelta(
-    time_tuple: list[Ratio],
+    time_tuple: list[Ratio]
 ) -> datetime.timedelta | None:
     try:
         hours, minutes, seconds, *_ = time_tuple
@@ -154,7 +154,7 @@ def parse_time_ratios_as_timedelta(
 
 def parse_gps_datetime(
     dtstr: str,
-    default_tz: datetime.timezone | None = datetime.timezone.utc,
+    default_tz: datetime.timezone | None = datetime.timezone.utc
 ) -> datetime.datetime | None:
     dtstr = dtstr.strip()
 
@@ -174,7 +174,7 @@ def parse_gps_datetime(
 def parse_gps_datetime_separately(
     datestr: str,
     timestr: str,
-    default_tz: datetime.timezone | None = datetime.timezone.utc,
+    default_tz: datetime.timezone | None = datetime.timezone.utc
 ) -> datetime.datetime | None:
     # Parse GPSDateStamp and GPSTimeStamp and return the corresponding datetime object in GMT.
     #
@@ -361,7 +361,7 @@ class ExifReadFromXMP(ExifReadABC):
         dt = self._extract_exif_datetime(
             "exif:DateTimeOriginal",
             "exif:SubsecTimeOriginal",
-            "exif:OffsetTimeOriginal",
+            "exif:OffsetTimeOriginal"
         )
         if dt is not None:
             return dt
@@ -369,7 +369,7 @@ class ExifReadFromXMP(ExifReadABC):
         dt = self._extract_exif_datetime(
             "exif:DateTimeDigitized",
             "exif:SubsecTimeDigitized",
-            "exif:OffsetTimeDigitized",
+            "exif:OffsetTimeDigitized"
         )
         if dt is not None:
             return dt
@@ -448,9 +448,9 @@ class ExifReadFromXMP(ExifReadABC):
             [
                 "exif:PixelXDimension",
                 "GPano:FullPanoWidthPixels",
-                "GPano:CroppedAreaImageWidthPixels",
+                "GPano:CroppedAreaImageWidthPixels"
             ],
-            int,
+            int
         )
 
     def extract_height(self) -> int | None:
@@ -458,9 +458,9 @@ class ExifReadFromXMP(ExifReadABC):
             [
                 "exif:PixelYDimension",
                 "GPano:FullPanoHeightPixels",
-                "GPano:CroppedAreaImageHeightPixels",
+                "GPano:CroppedAreaImageHeightPixels"
             ],
-            int,
+            int
         )
 
     def extract_orientation(self) -> int:
@@ -472,7 +472,7 @@ class ExifReadFromXMP(ExifReadABC):
     def _extract_alternative_fields(
         self,
         fields: T.Iterable[str],
-        field_type: type[_FIELD_TYPE],
+        field_type: type[_FIELD_TYPE]
     ) -> _FIELD_TYPE | None:
         # Extract a value for a list of ordered fields.
         # Return the value of the first existed field in the list
@@ -664,7 +664,7 @@ class ExifReadFromEXIF(ExifReadABC):
         dt = self._extract_exif_datetime(
             "EXIF DateTimeOriginal",
             "EXIF SubSecTimeOriginal",
-            "EXIF OffsetTimeOriginal",
+            "EXIF OffsetTimeOriginal"
         )
         if dt is not None:
             return dt
@@ -675,7 +675,7 @@ class ExifReadFromEXIF(ExifReadABC):
         dt = self._extract_exif_datetime(
             "EXIF DateTimeDigitized",
             "EXIF SubSecTimeDigitized",
-            "EXIF OffsetTimeDigitized",
+            "EXIF OffsetTimeDigitized"
         )
         if dt is not None:
             return dt
@@ -712,7 +712,7 @@ class ExifReadFromEXIF(ExifReadABC):
         # Extract image direction (i.e. compass, heading, bearing)
         fields = [
             "GPS GPSImgDirection",
-            "GPS GPSTrack",
+            "GPS GPSTrack"
         ]
         return self._extract_alternative_fields(fields, float)
 
@@ -780,7 +780,7 @@ class ExifReadFromEXIF(ExifReadABC):
     def _extract_alternative_fields(
         self,
         fields: T.Iterable[str],
-        field_type: type[_FIELD_TYPE],
+        field_type: type[_FIELD_TYPE]
     ) -> _FIELD_TYPE | None:
         # Extract a value for a list of ordered fields.
         # Return the value of the first existed field in the list

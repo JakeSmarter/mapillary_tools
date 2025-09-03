@@ -12,7 +12,7 @@ LOG = logging.getLogger(__name__)
 
 
 def remove_outliers(
-    sequence: T.Sequence[GPSPoint],
+    sequence: T.Sequence[GPSPoint]
 ) -> T.Sequence[GPSPoint]:
     distances = [
         geo.gps_distance((left.lat, left.lon), (right.lat, right.lon))
@@ -26,11 +26,11 @@ def remove_outliers(
     max_distance = max(
         # distance between two points hence double
         constants.GOPRO_GPS_PRECISION + constants.GOPRO_GPS_PRECISION,
-        max_distance,
+        max_distance
     )
     sequences = gps_filter.split_if(
         T.cast(T.List[geo.Point], sequence),
-        gps_filter.distance_gt(max_distance),
+        gps_filter.distance_gt(max_distance)
     )
     LOG.debug(
         "Split to %d sequences with max distance %f", len(sequences), max_distance
@@ -48,12 +48,12 @@ def remove_outliers(
 
     return T.cast(
         T.List[GPSPoint],
-        gps_filter.find_majority(merged.values()),
+        gps_filter.find_majority(merged.values())
     )
 
 
 def remove_noisy_points(
-    sequence: T.Sequence[GPSPoint],
+    sequence: T.Sequence[GPSPoint]
 ) -> T.Sequence[GPSPoint]:
     num_points = len(sequence)
     sequence = [
@@ -66,7 +66,7 @@ def remove_noisy_points(
         LOG.debug(
             "Removed %d points with the GPS fix not in %s",
             num_points - len(sequence),
-            constants.GOPRO_GPS_FIXES,
+            constants.GOPRO_GPS_FIXES
         )
 
     num_points = len(sequence)
@@ -80,7 +80,7 @@ def remove_noisy_points(
         LOG.debug(
             "Removed %d points with DoP value higher than %d",
             num_points - len(sequence),
-            constants.GOPRO_MAX_DOP100,
+            constants.GOPRO_MAX_DOP100
         )
 
     num_points = len(sequence)
@@ -88,7 +88,7 @@ def remove_noisy_points(
     if len(sequence) < num_points:
         LOG.debug(
             "Removed %d outlier points",
-            num_points - len(sequence),
+            num_points - len(sequence)
         )
 
     return sequence

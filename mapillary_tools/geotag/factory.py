@@ -15,7 +15,7 @@ from . import (
     geotag_images_from_video,
     geotag_videos_from_exiftool,
     geotag_videos_from_gpx,
-    geotag_videos_from_video,
+    geotag_videos_from_video
 )
 from .options import InterpolationOption, SOURCE_TYPE_ALIAS, SourceOption, SourceType
 
@@ -54,7 +54,7 @@ def parse_source_option(source: str) -> list[SourceOption]:
 def process(
     # Collection: ABC for sized iterable container classes
     paths: T.Iterable[Path],
-    options: T.Collection[SourceOption],
+    options: T.Collection[SourceOption]
 ) -> list[types.MetadataOrError]:
     if not options:
         raise ValueError("No geotag options provided")
@@ -119,8 +119,8 @@ def _is_reprocessable(metadata: types.MetadataOrError) -> bool:
                 exceptions.MapillaryGeoTaggingError,
                 exceptions.MapillaryVideoGPSNotFoundError,
                 exceptions.MapillaryExiftoolNotFoundError,
-                exceptions.MapillaryExifToolXMLNotFoundError,
-            ),
+                exceptions.MapillaryExifToolXMLNotFoundError
+            )
         ):
             return True
 
@@ -129,7 +129,7 @@ def _is_reprocessable(metadata: types.MetadataOrError) -> bool:
 
 def _filter_images_and_videos(
     paths: T.Iterable[Path],
-    filetypes: set[types.FileType] | None = None,
+    filetypes: set[types.FileType] | None = None
 ) -> tuple[list[Path], list[Path]]:
     image_paths = []
     video_paths = []
@@ -189,7 +189,7 @@ def _build_image_geotag(option: SourceOption) -> base.GeotagImagesFromGeneric | 
             )
         return geotag_images_from_exiftool.GeotagImagesFromExifToolWithSamples(
             source_path=option.source_path,
-            num_processes=option.num_processes,
+            num_processes=option.num_processes
         )
 
     elif option.source is SourceType.GPX:
@@ -197,7 +197,7 @@ def _build_image_geotag(option: SourceOption) -> base.GeotagImagesFromGeneric | 
             source_path=_ensure_source_path(option),
             use_gpx_start_time=interpolation.use_gpx_start_time,
             offset_time=interpolation.offset_time,
-            num_processes=option.num_processes,
+            num_processes=option.num_processes
         )
 
     elif option.source is SourceType.NMEA:
@@ -205,14 +205,14 @@ def _build_image_geotag(option: SourceOption) -> base.GeotagImagesFromGeneric | 
             source_path=_ensure_source_path(option),
             use_gpx_start_time=interpolation.use_gpx_start_time,
             offset_time=interpolation.offset_time,
-            num_processes=option.num_processes,
+            num_processes=option.num_processes
         )
 
     elif option.source in [SourceType.GOPRO, SourceType.BLACKVUE, SourceType.CAMM]:
         return geotag_images_from_video.GeotagImageSamplesFromVideo(
             _ensure_source_path(option),
             offset_time=interpolation.offset_time,
-            num_processes=option.num_processes,
+            num_processes=option.num_processes
         )
 
     else:
@@ -278,7 +278,7 @@ def _build_video_geotag(option: SourceOption) -> base.GeotagVideosFromGeneric | 
                 "source_path must be provided for EXIFTOOL_XML source"
             )
         return geotag_videos_from_exiftool.GeotagVideosFromExifToolXML(
-            source_path=option.source_path,
+            source_path=option.source_path
         )
 
     elif option.source is SourceType.GPX:

@@ -16,7 +16,7 @@ class GeotagImagesFromGPXFile(GeotagImagesFromGPX):
         source_path: Path,
         use_gpx_start_time: bool = False,
         offset_time: float = 0.0,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         try:
             tracks = utils.parse_gpx(source_path)
@@ -29,12 +29,12 @@ class GeotagImagesFromGPXFile(GeotagImagesFromGPX):
             LOG.warning(
                 "Found %s tracks in the GPX file %s. Will merge points in all the tracks as a single track for interpolation",
                 len(tracks),
-                source_path,
+                source_path
             )
         points = sum(tracks, [])
         super().__init__(
             points,
             use_gpx_start_time=use_gpx_start_time,
             offset_time=offset_time,
-            num_processes=num_processes,
+            num_processes=num_processes
         )

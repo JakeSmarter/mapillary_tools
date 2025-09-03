@@ -61,13 +61,13 @@ _parse_pixels = functools.partial(
         "M": 1000 * 1000,
         "MP": 1000 * 1000,
         "G": 1000 * 1000 * 1000,
-        "GP": 1000 * 1000 * 1000,
-    },
+        "GP": 1000 * 1000 * 1000
+    }
 )
 
 _parse_filesize = functools.partial(
     _parse_scaled_integers,
-    scale={"B": 1, "K": 1024, "M": 1024 * 1024, "G": 1024 * 1024 * 1024},
+    scale={"B": 1, "K": 1024, "M": 1024 * 1024, "G": 1024 * 1024 * 1024}
 )
 
 ###################
@@ -147,7 +147,7 @@ MAPILLARY_UPLOAD_HISTORY_PATH: str = os.getenv(
 )
 UPLOAD_CACHE_DIR: str = os.getenv(
     _ENV_PREFIX + "UPLOAD_CACHE_DIR",
-    os.path.join(tempfile.gettempdir(), "mapillary_tools", "upload_cache"),
+    os.path.join(tempfile.gettempdir(), "mapillary_tools", "upload_cache")
 )
 # The minimal upload speed is used to calculate the read timeout to avoid upload hanging:
 # timeout = upload_size / MIN_UPLOAD_SPEED

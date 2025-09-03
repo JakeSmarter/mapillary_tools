@@ -8,7 +8,7 @@ from . import (
     construct_mp4_parser as cparser,
     io_utils,
     mp4_sample_parser as sample_parser,
-    simple_mp4_parser as sparser,
+    simple_mp4_parser as sparser
 )
 from .construct_mp4_parser import BoxDict
 from .mp4_sample_parser import RawSample
@@ -30,8 +30,8 @@ def _build_stsd(descriptions: T.Sequence[T.Any]) -> BoxDict:
     return {
         "type": b"stsd",
         "data": {
-            "entries": descriptions,
-        },
+            "entries": descriptions
+        }
     }
 
 
@@ -41,18 +41,18 @@ def _build_stsz(sizes: T.Sequence[int]) -> BoxDict:
         data = {
             "sample_size": sizes[0],
             "sample_count": len(sizes),
-            "entries": [],
+            "entries": []
         }
     else:
         data = {
             "sample_size": 0,
             "sample_count": len(sizes),
-            "entries": sizes,
+            "entries": sizes
         }
 
     return {
         "type": b"stsz",
-        "data": data,
+        "data": data
     }
 
 
@@ -102,11 +102,11 @@ def _build_stsc(raw_samples: T.Iterable[RawSample]) -> BoxDict:
                 {
                     "first_chunk": idx + 1,
                     "samples_per_chunk": chunk.samples_per_chunk,
-                    "sample_description_index": chunk.sample_description_index,
+                    "sample_description_index": chunk.sample_description_index
                 }
                 for idx, chunk in enumerate(chunks)
-            ],
-        },
+            ]
+        }
     }
 
 
@@ -130,8 +130,8 @@ def _build_stts(sample_deltas: T.Iterable[int]) -> BoxDict:
     return {
         "type": b"stts",
         "data": {
-            "entries": [dataclasses.asdict(td) for td in compressed],
-        },
+            "entries": [dataclasses.asdict(td) for td in compressed]
+        }
     }
 
 
@@ -156,8 +156,8 @@ def _build_ctts(sample_composition_offsets: T.Iterable[int]) -> BoxDict:
     return {
         "type": b"ctts",
         "data": {
-            "entries": [dataclasses.asdict(td) for td in compressed],
-        },
+            "entries": [dataclasses.asdict(td) for td in compressed]
+        }
     }
 
 
@@ -166,8 +166,8 @@ def _build_co64(raw_samples: T.Iterable[RawSample]) -> BoxDict:
     return {
         "type": b"co64",
         "data": {
-            "entries": [chunk.offset for chunk in chunks],
-        },
+            "entries": [chunk.offset for chunk in chunks]
+        }
     }
 
 
@@ -175,8 +175,8 @@ def _build_stss(is_syncs: T.Iterable[bool]) -> BoxDict:
     return {
         "type": b"stss",
         "data": {
-            "entries": [idx + 1 for idx, is_sync in enumerate(is_syncs) if is_sync],
-        },
+            "entries": [idx + 1 for idx, is_sync in enumerate(is_syncs) if is_sync]
+        }
     }
 
 
@@ -195,7 +195,7 @@ def build_stbl_from_raw_samples(
         _build_stsz([s.size for s in raw_samples]),
         # always build as co64 to make sure moov box size is independent of chunk offsets for the same sample list
         # so we can calculate the moov box size in advance
-        _build_co64(raw_samples),
+        _build_co64(raw_samples)
     ]
     if any(s.composition_offset for s in raw_samples):
         boxes.append(_build_ctts((s.composition_offset for s in raw_samples)))
@@ -205,7 +205,7 @@ def build_stbl_from_raw_samples(
 
 
 def _filter_trak_boxes(
-    boxes: T.Iterable[BoxDict],
+    boxes: T.Iterable[BoxDict]
 ) -> T.Generator[BoxDict, None, None]:
     for box in boxes:
         if box["type"] == b"trak":
@@ -250,7 +250,7 @@ def _update_sbtl_sample_offsets(trak: BoxDict, sample_offset: int) -> int:
                 size=sample.size,
                 timedelta=sample.timedelta,
                 composition_offset=sample.composition_offset,
-                is_sync=sample.is_sync,
+                is_sync=sample.is_sync
             )
         )
         sample_offset += sample.size
@@ -267,7 +267,7 @@ def _update_sbtl_sample_offsets(trak: BoxDict, sample_offset: int) -> int:
 
 
 def iterate_samples(
-    moov_children: T.Iterable[BoxDict],
+    moov_children: T.Iterable[BoxDict]
 ) -> T.Generator[sample_parser.RawSample, None, None]:
     for box in moov_children:
         if box["type"] == b"trak":
@@ -285,20 +285,20 @@ def _build_mdat_header_data(mdat_size: int) -> bytes:
         return cparser.BoxHeader64.build(
             {
                 "size": mdat_size + 16,
-                "type": b"mdat",
+                "type": b"mdat"
             }
         )
     else:
         return cparser.BoxHeader32.build(
             {
                 "size": mdat_size + 8,
-                "type": b"mdat",
+                "type": b"mdat"
             }
         )
 
 
 def _filter_moov_children_boxes(
-    children: T.Iterable[BoxDict],
+    children: T.Iterable[BoxDict]
 ) -> T.Generator[BoxDict, None, None]:
     for box in children:
         if box["type"] == b"trak":
@@ -317,7 +317,7 @@ def _build_moov_typed_data(moov_children: T.Sequence[BoxDict]) -> bytes:
     return cparser.MP4WithoutSTBLBuilderConstruct.build_box(
         {
             "type": b"moov",
-            "data": moov_children,
+            "data": moov_children
         }
     )
 
@@ -330,7 +330,7 @@ _MOOVChildrenParserConstruct = cparser.Box64ConstructBuilder(
 def transform_mp4(
     src_fp: T.BinaryIO,
     sample_generator: T.Callable[[T.BinaryIO, list[BoxDict]], T.Iterator[io.IOBase]]
-    | None = None,
+    | None = None
 ) -> io_utils.ChainedIO:
     # extract ftyp
     src_fp.seek(0)
@@ -361,7 +361,7 @@ def transform_mp4(
 def build_mp4(
     ftyp_data: bytes,
     moov_children: T.Sequence[BoxDict],
-    sample_readers: T.Iterable[io.IOBase],
+    sample_readers: T.Iterable[io.IOBase]
 ) -> io_utils.ChainedIO:
     ftyp_typed_data = cparser.MP4WithoutSTBLBuilderConstruct.build_box(
         {"type": b"ftyp", "data": ftyp_data}
@@ -379,7 +379,7 @@ def build_mp4(
             io.BytesIO(new_moov_typed_data),
             # mdat
             io.BytesIO(_build_mdat_header_data(mdat_body_size)),
-            *sample_readers,
+            *sample_readers
         ]
     )
 

@@ -93,14 +93,14 @@ def parse_box_header(
         type=box_type,
         size32=size32,
         box_size=box_size,
-        maxsize=maxsize,
+        maxsize=maxsize
     )
 
 
 def parse_boxes(
     stream: T.BinaryIO,
     maxsize: int = -1,
-    extend_eof: bool = False,
+    extend_eof: bool = False
 ) -> T.Generator[T.Tuple[Header, T.BinaryIO], None, None]:
     assert maxsize == -1 or 0 <= maxsize
 
@@ -131,7 +131,7 @@ def parse_boxes_recursive(
     stream: T.BinaryIO,
     maxsize: int = -1,
     depth: int = 0,
-    box_list_types: set[bytes] | None = None,
+    box_list_types: set[bytes] | None = None
 ) -> T.Generator[tuple[Header, int, T.BinaryIO], None, None]:
     assert maxsize == -1 or 0 <= maxsize
 
@@ -147,7 +147,7 @@ def parse_boxes_recursive(
                 stream,
                 maxsize=header.maxsize,
                 depth=depth + 1,
-                box_list_types=box_list_types,
+                box_list_types=box_list_types
             )
 
 
@@ -155,7 +155,7 @@ def parse_path(
     stream: T.BinaryIO,
     path: T.Sequence[bytes | T.Sequence[bytes]],
     maxsize: int = -1,
-    depth: int = 0,
+    depth: int = 0
 ) -> T.Generator[tuple[Header, T.BinaryIO], None, None]:
     if not path:
         return

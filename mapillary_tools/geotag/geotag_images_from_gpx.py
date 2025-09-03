@@ -27,7 +27,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
         use_gpx_start_time: bool = False,
         use_image_start_time: bool = False,
         offset_time: float = 0.0,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         self.points = points
@@ -38,7 +38,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
     def _interpolate_image_metadata_along(
         self,
         image_metadata: types.ImageMetadata,
-        sorted_points: T.Sequence[geo.Point],
+        sorted_points: T.Sequence[geo.Point]
     ) -> types.ImageMetadata:
         assert sorted_points, "must have at least one point"
 
@@ -52,7 +52,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
                     f"The image date time is {round(delta, 3)} seconds behind the GPX start point",
                     image_time=build_capture_time(image_metadata.time),
                     gpx_start_time=gpx_start_time,
-                    gpx_end_time=gpx_end_time,
+                    gpx_end_time=gpx_end_time
                 )
 
         if sorted_points[-1].time < image_metadata.time:
@@ -65,7 +65,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
                     f"The image time is {round(delta, 3)} seconds beyond the GPX end point",
                     image_time=build_capture_time(image_metadata.time),
                     gpx_start_time=gpx_start_time,
-                    gpx_end_time=gpx_end_time,
+                    gpx_end_time=gpx_end_time
                 )
 
         interpolated = geo.interpolate(sorted_points, image_metadata.time)
@@ -76,7 +76,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
             lon=interpolated.lon,
             alt=interpolated.alt,
             angle=interpolated.angle,
-            time=interpolated.time,
+            time=interpolated.time
         )
 
     @override
@@ -120,7 +120,7 @@ class GeotagImagesFromGPX(GeotagImagesFromGeneric):
                     lat=p.lat,
                     lon=p.lon,
                     alt=p.alt,
-                    angle=p.angle,
+                    angle=p.angle
                 )
                 for p in sorted_points
             ]

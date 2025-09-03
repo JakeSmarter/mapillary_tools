@@ -23,7 +23,7 @@ class GeotagVideosFromGPX(GeotagVideosFromGeneric):
     def __init__(
         self,
         source_path: options.SourcePathOption | None = None,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         if source_path is None:
@@ -46,7 +46,7 @@ class GeotagVideosFromGPX(GeotagVideosFromGeneric):
                             "GPX file not found for video"
                         ),
                         filename=video_path,
-                        filetype=types.FileType.VIDEO,
+                        filetype=types.FileType.VIDEO
                     )
                 )
         return results

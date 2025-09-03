@@ -30,7 +30,7 @@ def parse_gpx(gpx_file: Path) -> list[Track]:
                             lat=point.latitude,
                             lon=point.longitude,
                             alt=point.elevation,
-                            angle=None,
+                            angle=None
                         )
                     )
 
@@ -46,7 +46,7 @@ def index_rdf_description_by_path(xml_paths: T.Sequence[Path]) -> dict[str, ET.E
         except Exception as ex:
             LOG.warning(
                 f"Failed to parse {xml_path}: {ex}",
-                exc_info=LOG.isEnabledFor(logging.DEBUG),
+                exc_info=LOG.isEnabledFor(logging.DEBUG)
             )
             continue
 

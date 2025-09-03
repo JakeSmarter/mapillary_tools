@@ -109,21 +109,21 @@ class UploadService:
         stream: T.IO[bytes],
         offset: int | None = None,
         chunk_size: int = 2 * 1024 * 1024,  # 2MB
-        read_timeout: float | None = None,
+        read_timeout: float | None = None
     ) -> str:
         if offset is None:
             offset = self.fetch_offset()
         return self.upload_chunks(
             self.chunkize_byte_stream(stream, chunk_size),
             offset,
-            read_timeout=read_timeout,
+            read_timeout=read_timeout
         )
 
     def upload_chunks(
         self,
         chunks: T.Iterable[bytes],
         offset: int | None = None,
-        read_timeout: float | None = None,
+        read_timeout: float | None = None
     ) -> str:
         if offset is None:
             offset = self.fetch_offset()
@@ -136,14 +136,14 @@ class UploadService:
         self,
         shifted_chunks: T.Iterable[bytes],
         offset: int,
-        read_timeout: float | None = None,
+        read_timeout: float | None = None
     ) -> str:
         # Upload the chunks that must already be shifted by the offset (e.g. fp.seek(offset, io.SEEK_SET))
 
         url = f"{MAPILLARY_UPLOAD_ENDPOINT}/{self.session_key}"
         headers = {
             "Offset": f"{offset}",
-            "X-Entity-Name": self.session_key,
+            "X-Entity-Name": self.session_key
         }
 
         resp = self.user_session.post(
@@ -173,7 +173,7 @@ class FakeUploadService(UploadService):
         *args,
         upload_path: Path | None = None,
         transient_error_ratio: float = 0.0,
-        **kwargs,
+        **kwargs
     ):
         super().__init__(*args, **kwargs)
         if upload_path is None:
@@ -188,7 +188,7 @@ class FakeUploadService(UploadService):
         self,
         shifted_chunks: T.Iterable[bytes],
         offset: int,
-        read_timeout: float | None = None,
+        read_timeout: float | None = None
     ) -> str:
         expected_offset = self.fetch_offset()
         if offset != expected_offset:

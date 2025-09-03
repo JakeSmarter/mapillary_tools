@@ -36,7 +36,7 @@ class GeotagImagesFromGeneric(abc.ABC, T.Generic[TImageExtractor]):
         map_results = utils.mp_map_maybe(
             self.run_extraction,
             extractors,
-            num_processes=self.num_processes,
+            num_processes=self.num_processes
         )
 
         results = list(
@@ -45,7 +45,7 @@ class GeotagImagesFromGeneric(abc.ABC, T.Generic[TImageExtractor]):
                 desc="Extracting images",
                 unit="images",
                 disable=LOG.isEnabledFor(logging.DEBUG),
-                total=len(extractors),
+                total=len(extractors)
             )
         )
 
@@ -102,7 +102,7 @@ class GeotagVideosFromGeneric(abc.ABC, T.Generic[TVideoExtractor]):
         map_results = utils.mp_map_maybe(
             self.run_extraction,
             extractors,
-            num_processes=self.num_processes,
+            num_processes=self.num_processes
         )
 
         results = list(
@@ -111,7 +111,7 @@ class GeotagVideosFromGeneric(abc.ABC, T.Generic[TVideoExtractor]):
                 desc="Extracting videos",
                 unit="videos",
                 disable=LOG.isEnabledFor(logging.DEBUG),
-                total=len(extractors),
+                total=len(extractors)
             )
         )
 

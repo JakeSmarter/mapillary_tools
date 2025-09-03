@@ -28,7 +28,7 @@ class SourceType(enum.Enum):
 SOURCE_TYPE_ALIAS: dict[str, SourceType] = {
     "blackvue_videos": SourceType.BLACKVUE,
     "gopro_videos": SourceType.GOPRO,
-    "exiftool": SourceType.EXIFTOOL_RUNTIME,
+    "exiftool": SourceType.EXIFTOOL_RUNTIME
 }
 
 
@@ -141,33 +141,33 @@ SourceOptionSchema = {
     "properties": {
         "source": {
             "type": "string",
-            "enum": [s.value for s in SourceType] + list(SOURCE_TYPE_ALIAS.keys()),
+            "enum": [s.value for s in SourceType] + list(SOURCE_TYPE_ALIAS.keys())
         },
         "filetypes": {
             "type": "array",
             "items": {
                 "type": "string",
-                "enum": [t.value for t in types.FileType],
-            },
+                "enum": [t.value for t in types.FileType]
+            }
         },
         "source_path": {
-            "type": "string",
+            "type": "string"
         },
         "pattern": {
-            "type": "string",
+            "type": "string"
         },
         "num_processes": {
-            "type": "integer",
+            "type": "integer"
         },
         "interpolation_offset_time": {
-            "type": "number",
+            "type": "number"
         },
         "interpolation_use_gpx_start_time": {
-            "type": "boolean",
-        },
+            "type": "boolean"
+        }
     },
     "required": ["source"],
-    "additionalProperties": False,
+    "additionalProperties": False
 }
 
 

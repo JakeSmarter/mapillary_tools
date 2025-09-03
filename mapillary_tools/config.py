@@ -23,8 +23,8 @@ MAPILLARY_CONFIG_PATH = os.getenv(
         DEFAULT_MAPILLARY_FOLDER,
         "configs",
         # Windows is not happy with | so we convert MLY|ID|TOKEN to MLY_ID_TOKEN
-        api_v4.MAPILLARY_CLIENT_TOKEN.replace("|", "_"),
-    ),
+        api_v4.MAPILLARY_CLIENT_TOKEN.replace("|", "_")
+    )
 )
 
 
@@ -45,10 +45,10 @@ UserItemSchema = {
         # Not in use. Keep here for back-compatibility
         "MAPSettingsUsername": {"type": "string"},
         "MAPSettingsUserKey": {"type": "string"},
-        "user_upload_token": {"type": "string"},
+        "user_upload_token": {"type": "string"}
     },
     "required": ["user_upload_token"],
-    "additionalProperties": True,
+    "additionalProperties": True
 }
 
 

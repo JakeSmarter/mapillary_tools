@@ -19,7 +19,7 @@ from ..types import (
     ErrorMetadata,
     ImageMetadata,
     MetadataOrError,
-    VideoMetadata,
+    VideoMetadata
 )
 from .description import DescriptionJSONSerializer
 
@@ -68,7 +68,7 @@ class GPXSerializer(BaseSerializer):
             latitude=point.lat,
             longitude=point.lon,
             elevation=point.alt,
-            time=datetime.datetime.fromtimestamp(point.time, datetime.timezone.utc),
+            time=datetime.datetime.fromtimestamp(point.time, datetime.timezone.utc)
         )
 
         if isinstance(point, types.ImageMetadata):
@@ -116,8 +116,8 @@ class GPXSerializer(BaseSerializer):
                 "MAPLongitude",
                 "MAPLatitude",
                 "MAPCaptureTime",
-                "MAPAltitude",
-            ],
+                "MAPAltitude"
+            ]
         )
         gpx_track.segments.append(gpx_segment)
         return gpx_track

@@ -54,7 +54,7 @@ def sample_video(
     video_duration_ratio=constants.VIDEO_DURATION_RATIO,
     video_start_time: str | None = None,
     skip_sample_errors: bool = False,
-    rerun: bool = False,
+    rerun: bool = False
 ) -> None:
     video_dir, video_list = _normalize_path(video_import_path, skip_subfolders)
 
@@ -96,7 +96,7 @@ def sample_video(
             LOG.warning(
                 "Skip sampling video %s as it has been sampled in %s. Specify --rerun to resample it",
                 video_path.name,
-                sample_dir,
+                sample_dir
             )
             continue
 
@@ -106,7 +106,7 @@ def sample_video(
                     video_path,
                     sample_dir,
                     sample_distance=video_sample_distance,
-                    start_time=video_start_time_dt,
+                    start_time=video_start_time_dt
                 )
             else:
                 assert 0 < video_sample_interval, (
@@ -117,7 +117,7 @@ def sample_video(
                     sample_dir,
                     sample_interval=video_sample_interval,
                     duration_ratio=video_duration_ratio,
-                    start_time=video_start_time_dt,
+                    start_time=video_start_time_dt
                 )
         except ffmpeglib.FFmpegNotFoundError as ex:
             # fatal error
@@ -129,7 +129,7 @@ def sample_video(
                     "Skipping the error sampling %s: %s",
                     video_path,
                     str(ex),
-                    exc_info=LOG.isEnabledFor(logging.DEBUG),
+                    exc_info=LOG.isEnabledFor(logging.DEBUG)
                 )
             else:
                 raise
@@ -179,7 +179,7 @@ def _sample_single_video_by_interval(
     sample_dir: Path,
     sample_interval: float,
     duration_ratio: float,
-    start_time: datetime.datetime | None = None,
+    start_time: datetime.datetime | None = None
 ) -> None:
     ffmpeg = ffmpeglib.FFMPEG(constants.FFMPEG_PATH, constants.FFPROBE_PATH)
 
@@ -218,7 +218,7 @@ def _within_track_time_range_buffered(points, t: float) -> bool:
 def _sample_video_stream_by_distance(
     points: T.Sequence[geo.Point],
     video_track_parser: mp4_sample_parser.TrackBoxParser,
-    sample_distance: float,
+    sample_distance: float
 ) -> dict[int, tuple[mp4_sample_parser.Sample, geo.Point]]:
     # Locate video frames along the track (points), then resample them by the minimal sample_distance, and return the sparse frames.
 
@@ -233,14 +233,14 @@ def _sample_video_stream_by_distance(
     LOG.info(
         "Interpolating video samples in the time range from %s to %s",
         points[0].time,
-        points[-1].time,
+        points[-1].time
     )
     interpolator = geo.Interpolator([points])
     interp_sample_points = [
         (
             frame_idx_0based,
             video_sample,
-            interpolator.interpolate(video_sample.exact_composition_time),
+            interpolator.interpolate(video_sample.exact_composition_time)
         )
         for frame_idx_0based, video_sample in enumerate(sorted_samples)
         if _within_track_time_range_buffered(
@@ -254,13 +254,13 @@ def _sample_video_stream_by_distance(
         geo.sample_points_by_distance(
             interp_sample_points,
             sample_distance,
-            point_func=lambda x: x[2],
+            point_func=lambda x: x[2]
         )
     )
     LOG.info(
         "Selected %d video samples by the minimal sample distance %s",
         len(selected_interp_sample_points),
-        sample_distance,
+        sample_distance
     )
 
     return {
@@ -273,7 +273,7 @@ def _sample_single_video_by_distance(
     video_path: Path,
     sample_dir: Path,
     sample_distance: float,
-    start_time: datetime.datetime | None = None,
+    start_time: datetime.datetime | None = None
 ) -> None:
     ffmpeg = ffmpeglib.FFMPEG(constants.FFMPEG_PATH, constants.FFPROBE_PATH)
 
@@ -319,7 +319,7 @@ def _sample_single_video_by_distance(
             video_path,
             wip_dir,
             frame_indices=set(sorted_sample_indices),
-            stream_specifier=str(video_stream_idx),
+            stream_specifier=str(video_stream_idx)
         )
 
         frame_samples = ffmpeglib.FFMPEG.sort_selected_samples(

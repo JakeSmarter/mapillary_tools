@@ -48,7 +48,7 @@ EXIFTOOL_NAMESPACES: dict[str, str] = {
     "XMP-xmp": "http://ns.exiftool.org/XMP/XMP-xmp/1.0/",
     "XMP-xmpMM": "http://ns.exiftool.org/XMP/XMP-xmpMM/1.0/",
     "XMP-xmpNote": "http://ns.exiftool.org/XMP/XMP-xmpNote/1.0/",
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 }
 
 
@@ -80,7 +80,7 @@ def find_rdf_description_path(element: ET.Element) -> Path | None:
 
 
 def index_rdf_description_by_path_from_xml_element(
-    element: ET.Element,
+    element: ET.Element
 ) -> dict[str, ET.Element]:
     rdf_description_by_path: dict[str, ET.Element] = {}
 
@@ -98,7 +98,7 @@ class ExifToolRead(exif_read.ExifReadABC):
 
     def __init__(
         self,
-        etree: ET.ElementTree,
+        etree: ET.ElementTree
     ) -> None:
         self.etree = etree
 
@@ -139,14 +139,14 @@ class ExifToolRead(exif_read.ExifReadABC):
         return self._extract_gps_datetime(
             ["XMP-exif:GPSDateStamp"],
             # Put both here but I do not see any XMP-exif:GPSTimeStamp in my samples
-            ["XMP-exif:GPSDateTime", "XMP-exif:GPSTimeStamp"],
+            ["XMP-exif:GPSDateTime", "XMP-exif:GPSTimeStamp"]
         )
 
     def _extract_exif_datetime(
         self,
         dt_tags: T.Sequence[str],
         subsec_tags: T.Sequence[str],
-        offset_tags: T.Sequence[str],
+        offset_tags: T.Sequence[str]
     ) -> datetime.datetime | None:
         dtstr = self._extract_alternative_fields(dt_tags, str)
         if dtstr is None:
@@ -170,7 +170,7 @@ class ExifToolRead(exif_read.ExifReadABC):
             ["XMP-exif:DateTimeOriginal"],
             # NOTE: it is Subsec instead of SubSec
             ["XMP-exif:SubsecTimeOriginal"],
-            ["XMP-exif:OffsetTimeOriginal"],
+            ["XMP-exif:OffsetTimeOriginal"]
         )
         if dt is not None:
             return dt
@@ -182,7 +182,7 @@ class ExifToolRead(exif_read.ExifReadABC):
             ["XMP-exif:DateTimeDigitized", "XMP-xmp:CreateDate"],
             # NOTE: it is Subsec instead of SubSec
             ["XMP-exif:SubsecTimeDigitized"],
-            ["XMP-exif:OffsetTimeDigitized"],
+            ["XMP-exif:OffsetTimeDigitized"]
         )
         if dt is not None:
             return dt
@@ -194,7 +194,7 @@ class ExifToolRead(exif_read.ExifReadABC):
             ["XMP-exif:ModifyDate"],
             # NOTE: this tag might not exist in XMP
             ["XMP-exif:SubsecTime"],
-            ["XMP-exif:OffsetTime"],
+            ["XMP-exif:OffsetTime"]
         )
         if dt is not None:
             return dt
@@ -208,7 +208,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         dt = self._extract_exif_datetime(
             ["ExifIFD:DateTimeOriginal"],
             ["ExifIFD:SubSecTimeOriginal"],
-            ["ExifIFD:OffsetTimeOriginal"],
+            ["ExifIFD:OffsetTimeOriginal"]
         )
         if dt is not None:
             return dt
@@ -219,7 +219,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         dt = self._extract_exif_datetime(
             ["ExifIFD:CreateDate"],
             ["ExifIFD:SubSecTimeDigitized"],
-            ["ExifIFD:OffsetTimeDigitized"],
+            ["ExifIFD:OffsetTimeDigitized"]
         )
         if dt is not None:
             return dt
@@ -230,7 +230,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         dt = self._extract_exif_datetime(
             ["ExifIFD:ModifyDate", "IFD0:ModifyDate", "IFD1:ModifyDate"],
             ["ExifIFD:SubSecTime"],
-            ["ExifIFD:OffsetTime"],
+            ["ExifIFD:OffsetTime"]
         )
         if dt is not None:
             return dt
@@ -271,9 +271,9 @@ class ExifToolRead(exif_read.ExifReadABC):
         return self._extract_alternative_fields(
             [
                 "GPS:GPSImgDirection",
-                "GPS:GPSTrack",
+                "GPS:GPSTrack"
             ],
-            float,
+            float
         )
 
     def extract_lon_lat(self) -> tuple[float, float] | None:
@@ -298,7 +298,7 @@ class ExifToolRead(exif_read.ExifReadABC):
     ) -> tuple[float, float] | None:
         lon = self._extract_alternative_fields(
             [lon_tag],
-            float,
+            float
         )
         if lon is None:
             return None
@@ -308,7 +308,7 @@ class ExifToolRead(exif_read.ExifReadABC):
 
         lat = self._extract_alternative_fields(
             [lat_tag],
-            float,
+            float
         )
         if lat is None:
             return None
@@ -327,9 +327,9 @@ class ExifToolRead(exif_read.ExifReadABC):
                 "ExifIFD:Make",
                 "ExifIFD:LensMake",
                 "XMP-exif:Make",
-                "XMP-exifEX:LensMake",
+                "XMP-exifEX:LensMake"
             ],
-            str,
+            str
         )
         if make is None:
             return None
@@ -345,9 +345,9 @@ class ExifToolRead(exif_read.ExifReadABC):
                 "GoPro:Model",
                 "ExifIFD:LensModel",
                 "XMP-exif:Model",
-                "XMP-exifEX:LensModel",
+                "XMP-exifEX:LensModel"
             ],
-            str,
+            str
         )
         if model is None:
             return None
@@ -361,9 +361,9 @@ class ExifToolRead(exif_read.ExifReadABC):
                 "ExifIFD:ExifImageWidth",
                 "IFD0:ExifImageWidth",
                 "IFD1:ExifImageWidth",
-                "XMP-exif:ExifImageWidth",
+                "XMP-exif:ExifImageWidth"
             ],
-            int,
+            int
         )
 
     def extract_height(self) -> int | None:
@@ -374,9 +374,9 @@ class ExifToolRead(exif_read.ExifReadABC):
                 "ExifIFD:ExifImageHeight",
                 "IFD0:ExifImageHeight",
                 "IFD1:ExifImageHeight",
-                "XMP-exif:ExifImageHeight",
+                "XMP-exif:ExifImageHeight"
             ],
-            int,
+            int
         )
 
     def extract_orientation(self) -> int:
@@ -387,9 +387,9 @@ class ExifToolRead(exif_read.ExifReadABC):
                 "IFD0:Orientation",
                 "IFD1:Orientation",
                 "XMP-exif:Orientation",
-                "XMP-tiff:Orientation",
+                "XMP-tiff:Orientation"
             ],
-            int,
+            int
         )
         if orientation is None:
             return 1
@@ -400,7 +400,7 @@ class ExifToolRead(exif_read.ExifReadABC):
     def _extract_alternative_fields(
         self,
         fields: T.Sequence[str],
-        field_type: type[_FIELD_TYPE],
+        field_type: type[_FIELD_TYPE]
     ) -> _FIELD_TYPE | None:
         for field in fields:
             value = self.etree.findtext(field, namespaces=EXIFTOOL_NAMESPACES)

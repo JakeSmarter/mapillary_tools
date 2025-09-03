@@ -7,7 +7,7 @@ from .. import geo
 from ..mp4 import (
     construct_mp4_parser as cparser,
     mp4_sample_parser as sample_parser,
-    simple_mp4_builder as builder,
+    simple_mp4_builder as builder
 )
 
 from . import camm_parser
@@ -27,7 +27,7 @@ def _build_camm_sample(measurement: camm_parser.TelemetryMeasurement) -> bytes:
 def _create_edit_list_from_points(
     tracks: T.Sequence[T.Sequence[geo.Point]],
     movie_timescale: int,
-    media_timescale: int,
+    media_timescale: int
 ) -> builder.BoxDict:
     entries: list[dict] = []
 
@@ -49,7 +49,7 @@ def _create_edit_list_from_points(
                         "media_time": -1,
                         "segment_duration": segment_duration,
                         "media_rate_integer": 1,
-                        "media_rate_fraction": 0,
+                        "media_rate_fraction": 0
                     }
                 )
         else:
@@ -60,21 +60,21 @@ def _create_edit_list_from_points(
                     "media_time": media_time,
                     "segment_duration": segment_duration,
                     "media_rate_integer": 1,
-                    "media_rate_fraction": 0,
+                    "media_rate_fraction": 0
                 }
             )
 
     return {
         "type": b"elst",
         "data": {
-            "entries": entries,
-        },
+            "entries": entries
+        }
     }
 
 
 def convert_telemetry_to_raw_samples(
     measurements: T.Sequence[camm_parser.TelemetryMeasurement],
-    timescale: int,
+    timescale: int
 ) -> T.Generator[sample_parser.RawSample, None, None]:
     for idx, measurement in enumerate(measurements):
         camm_sample_data = _build_camm_sample(measurement)
@@ -96,7 +96,7 @@ def convert_telemetry_to_raw_samples(
             size=len(camm_sample_data),
             timedelta=timedelta,
             composition_offset=0,
-            is_sync=True,
+            is_sync=True
         )
 
 
@@ -106,13 +106,13 @@ _STBLChildrenBuilderConstruct = cparser.Box32ConstructBuilder(
 
 
 def _create_camm_stbl(
-    raw_samples: T.Iterable[sample_parser.RawSample],
+    raw_samples: T.Iterable[sample_parser.RawSample]
 ) -> builder.BoxDict:
     descriptions = [
         {
             "format": b"camm",
             "data_reference_index": 1,
-            "data": b"",
+            "data": b""
         }
     ]
 
@@ -121,13 +121,13 @@ def _create_camm_stbl(
     stbl_data = _STBLChildrenBuilderConstruct.build_boxlist(stbl_children_boxes)
     return {
         "type": b"stbl",
-        "data": stbl_data,
+        "data": stbl_data
     }
 
 
 def create_camm_trak(
     raw_samples: T.Sequence[sample_parser.RawSample],
-    media_timescale: int,
+    media_timescale: int
 ) -> builder.BoxDict:
     stbl = _create_camm_stbl(raw_samples)
 
@@ -135,8 +135,8 @@ def create_camm_trak(
         "type": b"hdlr",
         "data": {
             "handler_type": b"camm",
-            "name": "CameraMetadataMotionHandler",
-        },
+            "name": "CameraMetadataMotionHandler"
+        }
     }
 
     media_duration = sum(s.timedelta for s in raw_samples)
@@ -155,8 +155,8 @@ def create_camm_trak(
             "modification_time": 0,
             "timescale": media_timescale,
             "duration": media_duration,
-            "language": 21956,
-        },
+            "language": 21956
+        }
     }
 
     dinf: builder.BoxDict = {
@@ -171,21 +171,21 @@ def create_camm_trak(
                             "type": b"url ",
                             "data": {
                                 "flags": 1,
-                                "data": b"",
-                            },
+                                "data": b""
+                            }
                         }
-                    ],
-                },
+                    ]
+                }
             }
-        ],
+        ]
     }
 
     minf: builder.BoxDict = {
         "type": b"minf",
         "data": [
             dinf,
-            stbl,
-        ],
+            stbl
+        ]
     }
 
     tkhd: builder.BoxDict = {
@@ -202,8 +202,8 @@ def create_camm_trak(
             "track_ID": 0,
             # If the duration of this track cannot be determined then duration is set to all 1s (32-bit maxint).
             "duration": 0xFFFFFFFF,
-            "layer": 0,
-        },
+            "layer": 0
+        }
     }
 
     mdia: builder.BoxDict = {
@@ -211,23 +211,23 @@ def create_camm_trak(
         "data": [
             mdhd,
             hdlr,
-            minf,
-        ],
+            minf
+        ]
     }
 
     return {
         "type": b"trak",
         "data": [
             tkhd,
-            mdia,
-        ],
+            mdia
+        ]
     }
 
 
 def camm_sample_generator2(camm_info: camm_parser.CAMMInfo):
     def _f(
         fp: T.BinaryIO,
-        moov_children: list[builder.BoxDict],
+        moov_children: list[builder.BoxDict]
     ) -> T.Generator[io.IOBase, None, None]:
         movie_timescale = builder.find_movie_timescale(moov_children)
         # Make sure the precision of timedeltas not lower than 0.001 (1ms)
@@ -236,7 +236,7 @@ def camm_sample_generator2(camm_info: camm_parser.CAMMInfo):
         # Multiplex points for creating elst
         track: list[geo.Point] = [
             *(camm_info.gps or []),
-            *(camm_info.mini_gps or []),
+            *(camm_info.mini_gps or [])
         ]
         track.sort(key=lambda p: p.time)
         if track and track[0].time < 0:
@@ -249,7 +249,7 @@ def camm_sample_generator2(camm_info: camm_parser.CAMMInfo):
             *(camm_info.mini_gps or []),
             *(camm_info.accl or []),
             *(camm_info.gyro or []),
-            *(camm_info.magn or []),
+            *(camm_info.magn or [])
         ]
         measurements.sort(key=lambda m: m.time)
         if measurements and measurements[0].time < 0:
@@ -266,7 +266,7 @@ def camm_sample_generator2(camm_info: camm_parser.CAMMInfo):
             T.cast(T.List[builder.BoxDict], camm_trak["data"]).append(
                 {
                     "type": b"edts",
-                    "data": [elst],
+                    "data": [elst]
                 }
             )
         moov_children.append(camm_trak)
@@ -276,21 +276,21 @@ def camm_sample_generator2(camm_info: camm_parser.CAMMInfo):
             udta_data.append(
                 {
                     "type": b"@mak",
-                    "data": camm_info.make.encode("utf-8"),
+                    "data": camm_info.make.encode("utf-8")
                 }
             )
         if camm_info.model:
             udta_data.append(
                 {
                     "type": b"@mod",
-                    "data": camm_info.model.encode("utf-8"),
+                    "data": camm_info.model.encode("utf-8")
                 }
             )
         if udta_data:
             moov_children.append(
                 {
                     "type": b"udta",
-                    "data": udta_data,
+                    "data": udta_data
                 }
             )
 

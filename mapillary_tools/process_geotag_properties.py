@@ -14,18 +14,18 @@ from .geotag.options import (
     InterpolationOption,
     SourceOption,
     SourcePathOption,
-    SourceType,
+    SourceType
 )
 from .serializer.description import (
     DescriptionJSONSerializer,
-    validate_and_fail_metadata,
+    validate_and_fail_metadata
 )
 from .serializer.gpx import GPXSerializer
 
 LOG = logging.getLogger(__name__)
 DEFAULT_GEOTAG_SOURCE_OPTIONS = [
     SourceType.NATIVE.value,
-    SourceType.EXIFTOOL_RUNTIME.value,
+    SourceType.EXIFTOOL_RUNTIME.value
 ]
 
 
@@ -42,7 +42,7 @@ def _normalize_import_paths(import_path: Path | T.Sequence[Path]) -> T.Sequence[
 def _parse_source_options(
     geotag_source: list[str],
     video_geotag_source: list[str],
-    geotag_source_path: Path | None,
+    geotag_source_path: Path | None
 ) -> list[SourceOption]:
     parsed_options: list[SourceOption] = []
 
@@ -74,7 +74,7 @@ def _parse_source_options(
                 else:
                     LOG.warning(
                         "The option --geotag_source_path is ignored for source %s",
-                        parsed_option,
+                        parsed_option
                     )
 
     return parsed_options
@@ -93,7 +93,7 @@ def process_geotag_properties(
     interpolation_use_gpx_start_time: bool = False,
     interpolation_offset_time: float = 0.0,
     num_processes: int | None = None,
-    skip_subfolders=False,
+    skip_subfolders=False
 ) -> list[types.MetadataOrError]:
     import_paths = _normalize_import_paths(import_path)
 
@@ -113,7 +113,7 @@ def process_geotag_properties(
     options = _parse_source_options(
         geotag_source=geotag_source or [],
         video_geotag_source=video_geotag_source or [],
-        geotag_source_path=geotag_source_path,
+        geotag_source_path=geotag_source_path
     )
 
     for option in options:
@@ -122,7 +122,7 @@ def process_geotag_properties(
         if option.interpolation is None:
             option.interpolation = InterpolationOption(
                 offset_time=interpolation_offset_time,
-                use_gpx_start_time=interpolation_use_gpx_start_time,
+                use_gpx_start_time=interpolation_use_gpx_start_time
             )
 
     # TODO: can find both in one pass
@@ -137,7 +137,7 @@ def process_geotag_properties(
 def _apply_offsets(
     metadatas: T.Iterable[types.ImageMetadata],
     offset_time: float = 0.0,
-    offset_angle: float = 0.0,
+    offset_angle: float = 0.0
 ) -> None:
     for metadata in metadatas:
         if offset_time:
@@ -153,7 +153,7 @@ def _overwrite_exif_tags(
     time_tag=False,
     gps_tag=False,
     direction_tag=False,
-    orientation_tag=False,
+    orientation_tag=False
 ) -> None:
     should_write = any(
         [
@@ -161,7 +161,7 @@ def _overwrite_exif_tags(
             time_tag,
             gps_tag,
             direction_tag,
-            orientation_tag,
+            orientation_tag
         ]
     )
 
@@ -172,7 +172,7 @@ def _overwrite_exif_tags(
         metadatas,
         desc="Overwriting EXIF",
         unit="images",
-        disable=LOG.isEnabledFor(logging.DEBUG),
+        disable=LOG.isEnabledFor(logging.DEBUG)
     ):
         dt = datetime.datetime.fromtimestamp(metadata.time, datetime.timezone.utc)
         dt = dt.replace(tzinfo=datetime.timezone.utc)
@@ -200,13 +200,13 @@ def _overwrite_exif_tags(
             LOG.warning(
                 "Failed to overwrite EXIF for image %s",
                 metadata.filename,
-                exc_info=True,
+                exc_info=True
             )
 
 
 def _write_metadatas(
     metadatas: T.Sequence[types.MetadataOrError],
-    desc_path: str,
+    desc_path: str
 ) -> None:
     if desc_path == "-":
         descs = DescriptionJSONSerializer.serialize(metadatas)
@@ -232,7 +232,7 @@ def _is_error_skipped(
 
 def _show_stats(
     metadatas: T.Sequence[types.MetadataOrError],
-    skipped_process_errors: set[T.Type[Exception]],
+    skipped_process_errors: set[T.Type[Exception]]
 ) -> None:
     LOG.info("==> Process summary")
 
@@ -262,7 +262,7 @@ def _show_stats(
 def _show_stats_per_filetype(
     metadatas: T.Collection[types.MetadataOrError],
     filetype: types.FileType,
-    skipped_process_errors: set[T.Type[Exception]],
+    skipped_process_errors: set[T.Type[Exception]]
 ):
     good_metadatas: list[types.Metadata]
     good_metadatas, error_metadatas = types.separate_errors(metadatas)
@@ -309,7 +309,7 @@ def _validate_metadatas(
         utils.mp_map_maybe(
             validate_and_fail_metadata,
             T.cast(T.Iterable[types.Metadata], good_metadatas),
-            num_processes=num_processes,
+            num_processes=num_processes
         )
     )
 
@@ -330,7 +330,7 @@ def process_finalize(
     offset_time: float = 0.0,
     offset_angle: float = 0.0,
     desc_path: str | None = None,
-    num_processes: int | None = None,
+    num_processes: int | None = None
 ) -> list[types.MetadataOrError]:
     image_metadatas: list[types.ImageMetadata] = []
     video_metadatas: list[types.VideoMetadata] = []
@@ -359,7 +359,7 @@ def process_finalize(
     _apply_offsets(
         image_metadatas,
         offset_time=offset_time,
-        offset_angle=offset_angle,
+        offset_angle=offset_angle
     )
 
     metadatas = _validate_metadatas(metadatas, num_processes=num_processes)
@@ -380,7 +380,7 @@ def process_finalize(
         time_tag=overwrite_EXIF_time_tag,
         gps_tag=overwrite_EXIF_gps_tag,
         direction_tag=overwrite_EXIF_direction_tag,
-        orientation_tag=overwrite_EXIF_orientation_tag,
+        orientation_tag=overwrite_EXIF_orientation_tag
     )
 
     # find the description file path
@@ -398,7 +398,7 @@ def process_finalize(
             else:
                 LOG.warning(
                     'Writing the description file to STDOUT, because the import path "%s" is NOT a directory',
-                    str(import_paths[0]) if import_paths else "",
+                    str(import_paths[0]) if import_paths else ""
                 )
             desc_path = "-"
 

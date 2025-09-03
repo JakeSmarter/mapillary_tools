@@ -18,48 +18,48 @@ class Command:
             help="The minimal distance interval, in meters, for sampling video frames. [default: %(default)s]",
             default=constants.VIDEO_SAMPLE_DISTANCE,
             type=float,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--video_sample_interval",
             help="[DEPRECATED since v0.10.0] Time interval, in seconds, for sampling video frames. Since v0.10.0 you must disable distance-sampling with --video_sample_distance=-1 in order to apply this option. [default: %(default)s]",
             default=constants.VIDEO_SAMPLE_INTERVAL,
             type=float,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--video_duration_ratio",
             help="[DEPRECATED since v0.10.0] Real time video duration ratio of the under or oversampled video duration. [default: %(default)s]",
             type=float,
             default=constants.VIDEO_DURATION_RATIO,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--video_start_time",
             help="Video start time specified in YYYY_MM_DD_HH_MM_SS_sss in UTC. For example 2020_12_28_12_36_36_508 represents 2020-12-28T12:36:36.508Z.",
             default=None,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--skip_subfolders",
             help="Skip all subfolders and import only the images in the given directory path.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--rerun",
             help="Re-sample all videos. Note it will REMOVE all the existing video sample directories.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
         group.add_argument(
             "--skip_sample_errors",
             help="Skip errors from the video sampling.",
             action="store_true",
             default=False,
-            required=False,
+            required=False
         )
 
     def run(self, vars_args: dict):

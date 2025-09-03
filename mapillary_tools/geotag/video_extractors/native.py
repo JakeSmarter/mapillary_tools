@@ -44,7 +44,7 @@ class GoProVideoExtractor(BaseVideoExtractor):
             filetype=types.FileType.GOPRO,
             points=T.cast(T.List[geo.Point], gps_points),
             make=gopro_info.make,
-            model=gopro_info.model,
+            model=gopro_info.model
         )
 
         return video_metadata
@@ -70,7 +70,7 @@ class CAMMVideoExtractor(BaseVideoExtractor):
             filetype=types.FileType.CAMM,
             points=T.cast(T.List[geo.Point], camm_info.gps or camm_info.mini_gps),
             make=camm_info.make,
-            model=camm_info.model,
+            model=camm_info.model
         )
 
 
@@ -94,7 +94,7 @@ class BlackVueVideoExtractor(BaseVideoExtractor):
             filetype=types.FileType.BLACKVUE,
             points=blackvue_info.gps,
             make=blackvue_info.make,
-            model=blackvue_info.model,
+            model=blackvue_info.model
         )
 
         return video_metadata

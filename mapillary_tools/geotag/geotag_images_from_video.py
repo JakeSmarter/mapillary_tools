@@ -24,7 +24,7 @@ class GeotagImagesFromVideo(GeotagImagesFromGeneric):
         self,
         video_metadatas: T.Sequence[types.VideoMetadataOrError],
         offset_time: float = 0.0,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         self.video_metadatas = video_metadatas
@@ -48,13 +48,13 @@ class GeotagImagesFromVideo(GeotagImagesFromGeneric):
                 "Found %d sample images from video %s with error: %s",
                 len(sample_paths),
                 video_path,
-                video_error_metadata.error,
+                video_error_metadata.error
             )
             for sample_path in sample_paths:
                 image_error_metadata = types.describe_error_metadata(
                     video_error_metadata.error,
                     sample_path,
-                    filetype=types.FileType.IMAGE,
+                    filetype=types.FileType.IMAGE
                 )
                 final_image_metadatas.append(image_error_metadata)
 
@@ -65,7 +65,7 @@ class GeotagImagesFromVideo(GeotagImagesFromGeneric):
             LOG.debug(
                 "Found %d sample images from video %s",
                 len(sample_paths),
-                video_path,
+                video_path
             )
 
             geotag = GeotagImagesFromGPX(
@@ -73,7 +73,7 @@ class GeotagImagesFromVideo(GeotagImagesFromGeneric):
                 use_gpx_start_time=False,
                 use_image_start_time=True,
                 offset_time=self.offset_time,
-                num_processes=self.num_processes,
+                num_processes=self.num_processes
             )
 
             image_metadatas = geotag.to_description(image_paths)
@@ -99,7 +99,7 @@ class GeotagImageSamplesFromVideo(GeotagImagesFromGeneric):
         source_path: Path,
         filetypes: set[types.FileType] | None = None,
         offset_time: float = 0.0,
-        num_processes: int | None = None,
+        num_processes: int | None = None
     ):
         super().__init__(num_processes=num_processes)
         self.source_path = source_path
@@ -117,11 +117,11 @@ class GeotagImageSamplesFromVideo(GeotagImagesFromGeneric):
         video_paths_with_image_samples = list(image_samples_by_video_path.keys())
         video_metadatas = GeotagVideosFromVideo(
             filetypes=self.filetypes,
-            num_processes=self.num_processes,
+            num_processes=self.num_processes
         ).to_description(video_paths_with_image_samples)
         geotag = GeotagImagesFromVideo(
             video_metadatas,
             offset_time=self.offset_time,
-            num_processes=self.num_processes,
+            num_processes=self.num_processes
         )
         return geotag.to_description(image_paths)

@@ -24,7 +24,7 @@ class Point:
         "lat",
         "lon",
         "alt",
-        "angle",
+        "angle"
     )
     time: float
     lat: float
@@ -67,7 +67,7 @@ def avg_speed(sequence: T.Sequence[PointLike]) -> float:
 
 def compute_bearing(
     latlon_1: tuple[float, float],
-    latlon_2: tuple[float, float],
+    latlon_2: tuple[float, float]
 ) -> float:
     # Get the compass bearing from start to end.
     #
@@ -252,7 +252,7 @@ _T = T.TypeVar("_T")
 def sample_points_by_distance(
     samples: T.Iterable[_T],
     min_distance: float,
-    point_func: T.Callable[[_T], Point],
+    point_func: T.Callable[[_T], Point]
 ) -> T.Generator[_T, None, None]:
     prevp: Point | None = None
     for sample in samples:

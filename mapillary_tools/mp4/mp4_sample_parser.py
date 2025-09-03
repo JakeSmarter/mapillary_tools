@@ -53,7 +53,7 @@ def _extract_raw_samples(
     chunk_offsets: T.Sequence[int],
     timedeltas: T.Sequence[int],
     composition_offsets: list[int] | None,
-    syncs: set[int] | None,
+    syncs: set[int] | None
 ) -> T.Generator[RawSample, None, None]:
     if not sizes:
         return
@@ -94,7 +94,7 @@ def _extract_raw_samples(
                     size=sizes[sample_idx],
                     timedelta=timedeltas[sample_idx],
                     composition_offset=composition_offset,
-                    is_sync=is_sync,
+                    is_sync=is_sync
                 )
                 sample_offset += sizes[sample_idx]
                 sample_idx += 1
@@ -121,7 +121,7 @@ def _extract_raw_samples(
                 size=sizes[sample_idx],
                 timedelta=timedeltas[sample_idx],
                 composition_offset=composition_offset,
-                is_sync=is_sync,
+                is_sync=is_sync
             )
             sample_offset += sizes[sample_idx]
             sample_idx += 1
@@ -131,7 +131,7 @@ def _extract_raw_samples(
 def _extract_samples(
     raw_samples: T.Iterator[RawSample],
     descriptions: list,
-    timescale: int,
+    timescale: int
 ) -> T.Generator[Sample, None, None]:
     acc_delta = 0
     for raw_sample in raw_samples:
@@ -142,7 +142,7 @@ def _extract_samples(
             exact_timedelta=raw_sample.timedelta / timescale,
             # CT(n) = DT(n) + CTTS(n)
             exact_composition_time=(acc_delta + raw_sample.composition_offset)
-            / timescale,
+            / timescale
         )
         acc_delta += raw_sample.timedelta
 
@@ -153,7 +153,7 @@ STBLBoxlistConstruct = cparser.Box64ConstructBuilder(
 
 
 def extract_raw_samples_from_stbl_data(
-    stbl: bytes,
+    stbl: bytes
 ) -> tuple[list[dict], T.Generator[RawSample, None, None]]:
     descriptions: list[dict] = []
     sizes: list[int] = []
@@ -262,7 +262,7 @@ class TrackBoxParser:
         descriptions, raw_samples = extract_raw_samples_from_stbl_data(self.stbl_data)
         mdhd = T.cast(
             dict,
-            cparser.find_box_at_pathx(self.trak_children, [b"mdia", b"mdhd"])["data"],
+            cparser.find_box_at_pathx(self.trak_children, [b"mdia", b"mdhd"])["data"]
         )
         yield from _extract_samples(raw_samples, descriptions, mdhd["timescale"])
 
@@ -273,7 +273,7 @@ class MovieBoxParser:
     def __init__(self, moov_data: bytes):
         self.moov_children = T.cast(
             T.Sequence[cparser.BoxDict],
-            cparser.MOOVWithoutSTBLBuilderConstruct.BoxList.parse(moov_data),
+            cparser.MOOVWithoutSTBLBuilderConstruct.BoxList.parse(moov_data)
         )
 
     @classmethod
@@ -310,7 +310,7 @@ class MovieBoxParser:
             raise IndexError(
                 "unable to read stream at %d from the track list (length %d)",
                 stream_idx,
-                len(trak_boxes),
+                len(trak_boxes)
             )
         trak_children = T.cast(
             T.Sequence[cparser.BoxDict], trak_boxes[stream_idx]["data"]

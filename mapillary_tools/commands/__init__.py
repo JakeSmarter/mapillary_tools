@@ -6,5 +6,5 @@ from . import (
     sample_video,
     upload,
     video_process,
-    video_process_and_upload,
+    video_process_and_upload
 )

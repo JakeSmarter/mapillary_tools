@@ -46,7 +46,7 @@ class VideoExifToolExtractor(BaseVideoExtractor):
                     T.List[geo.Point],
                     gpmf_gps_filter.remove_noisy_points(
                         T.cast(T.List[telemetry.GPSPoint], points)
-                    ),
+                    )
                 )
                 if not points:
                     raise exceptions.MapillaryGPSNoiseError("GPS is too noisy")
@@ -64,7 +64,7 @@ class VideoExifToolExtractor(BaseVideoExtractor):
             filetype=filetype,
             points=points,
             make=make,
-            model=model,
+            model=model
         )
 
         return video_metadata

@@ -22,7 +22,7 @@ class ExiftoolRunner:
             "-ee",
             *["-api", "LargeFileSupport=1"],
             *["-charset", "filename=utf8"],
-            *["-@", "-"],
+            *["-@", "-"]
         ]
 
         if self.recursive:
@@ -49,7 +49,7 @@ class ExiftoolRunner:
             input=stdin,
             encoding="utf-8",
             # Do not check exit status to allow some files not found
-            # check=True,
+            # check=True
         )
 
         return process.stdout

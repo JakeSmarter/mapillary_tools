@@ -79,7 +79,7 @@ class FFMPEG:
         self,
         ffmpeg_path: str = "ffmpeg",
         ffprobe_path: str = "ffprobe",
-        stderr: int | None = None,
+        stderr: int | None = None
     ) -> None:
         # Initialize FFMPEG wrapper with paths to ffmpeg and ffprobe binaries.
         #
@@ -109,7 +109,7 @@ class FFMPEG:
             "-hide_banner",
             "-show_format",
             "-show_streams",
-            str(video_path),
+            str(video_path)
         ]
         return T.cast(ProbeOutput, self._run_ffprobe_json(cmd))
 
@@ -118,7 +118,7 @@ class FFMPEG:
         video_path: Path,
         sample_dir: Path,
         sample_interval: float,
-        stream_specifier: int | str = "v",
+        stream_specifier: int | str = "v"
     ) -> None:
         # Extract frames from video at regular time intervals using fps filter.
         #
@@ -154,7 +154,7 @@ class FFMPEG:
             # *["-qscale:v", "1", "-qmin", "1"],
             *["-qscale:v", "2"],
             # Output
-            output_template,
+            output_template
         ]
 
         self.run_ffmpeg_non_interactive(cmd)
@@ -201,7 +201,7 @@ class FFMPEG:
         video_path: Path,
         sample_dir: Path,
         frame_indices: set[int],
-        stream_specifier: int | str = "v",
+        stream_specifier: int | str = "v"
     ) -> None:
         # Extract specific frames from video by frame number using select filter.
         #
@@ -274,7 +274,7 @@ class FFMPEG:
                         # but it could be IMG_005.JPG
                         # https://www.ffmpeg.org/ffmpeg-formats.html#Options-21
                         # If set to 1, expand the filename with pts from pkt->pts. Default value is 0.
-                        # *["-frame_pts", "1"],
+                        # *["-frame_pts", "1"]
                     ],
                     # Video quality level (or the alias -q:v)
                     # -q:v=1 is the best quality but larger image sizes
@@ -282,7 +282,7 @@ class FFMPEG:
                     # *["-qscale:v", "1", "-qmin", "1"],
                     *["-qscale:v", "2"],
                     # output
-                    output_template,
+                    output_template
                 ]
                 self.run_ffmpeg_non_interactive(cmd)
             finally:
@@ -297,7 +297,7 @@ class FFMPEG:
         cls,
         sample_dir: Path,
         video_path: Path,
-        selected_stream_specifiers: list[int | str] | None = None,
+        selected_stream_specifiers: list[int | str] | None = None
     ) -> list[tuple[int, list[Path | None]]]:
         # Group extracted frame samples by frame index across multiple streams.
         #
@@ -374,7 +374,7 @@ class FFMPEG:
             _(?P<stream_specifier>\d+|v)   # Stream specifier can be a number or "v"
             _(?P<frame_idx>\d+)$           # Frame index, can be 0-padded
             """,
-            re.X,
+            re.X
         )
         for sample_path in sample_dir.iterdir():
             result = cls._extract_stream_frame_idx(
