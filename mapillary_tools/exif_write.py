@@ -18,7 +18,7 @@ class ExifEdit:
     _filename_or_bytes: str | bytes
 
     def __init__(self, filename_or_bytes: Path | bytes) -> None:
-        """Initialize the object"""
+        # Initialize the object
         if isinstance(filename_or_bytes, Path):
             # make sure filename is resolved to avoid to be interpretted as bytes in piexif
             # see https://github.com/hMatoba/Piexif/issues/124
@@ -31,9 +31,7 @@ class ExifEdit:
     def decimal_to_dms(
         value: float, precision: int
     ) -> tuple[tuple[float, int], tuple[float, int], tuple[float, int]]:
-        """
-        Convert decimal position to degrees, minutes, seconds in a fromat supported by EXIF
-        """
+        # Convert decimal position to degrees, minutes, seconds in a fromat supported by EXIF
         deg = math.floor(value)
         min = math.floor((value - deg) * 60)
         sec = math.floor((value - deg - min / 60) * 3600 * precision)
@@ -41,19 +39,19 @@ class ExifEdit:
         return (deg, 1), (min, 1), (sec, precision)
 
     def add_image_description(self, data: dict) -> None:
-        """Add a dict to image description."""
+        # Add a dict to image description.
         self._ef["0th"][piexif.ImageIFD.ImageDescription] = json.dumps(
             data, sort_keys=True, separators=(",", ":")
         )
 
     def add_orientation(self, orientation: int) -> None:
-        """Add image orientation to image."""
+        # Add image orientation to image.
         if orientation not in range(1, 9):
             raise ValueError(f"orientation value {orientation} must be in range(1, 9)")
         self._ef["0th"][piexif.ImageIFD.Orientation] = orientation
 
     def add_date_time_original(self, dt: datetime.datetime) -> None:
-        """Add date time original."""
+        # Add date time original
         self._ef["Exif"][piexif.ExifIFD.DateTimeOriginal] = dt.strftime(
             "%Y:%m:%d %H:%M:%S"
         )
@@ -76,7 +74,7 @@ class ExifEdit:
                 del self._ef["Exif"][piexif.ExifIFD.OffsetTimeOriginal]
 
     def add_gps_datetime(self, dt: datetime.datetime) -> None:
-        """Add GPSDateStamp and GPSTimeStamp."""
+        # Add GPSDateStamp and GPSTimeStamp.
         dt = dt.astimezone(datetime.timezone.utc)
         # YYYY:MM:DD
         self._ef["GPS"][piexif.GPSIFD.GPSDateStamp] = dt.strftime("%Y:%m:%d")
@@ -88,7 +86,7 @@ class ExifEdit:
         )
 
     def add_lat_lon(self, lat: float, lon: float, precision: float = 1e7) -> None:
-        """Add lat, lon to gps (lat, lon in float)."""
+        # Add lat, lon to gps (lat, lon in float).
         self._ef["GPS"][piexif.GPSIFD.GPSLatitudeRef] = "N" if lat > 0 else "S"
         self._ef["GPS"][piexif.GPSIFD.GPSLongitudeRef] = "E" if lon > 0 else "W"
         self._ef["GPS"][piexif.GPSIFD.GPSLongitude] = ExifEdit.decimal_to_dms(
@@ -99,7 +97,7 @@ class ExifEdit:
         )
 
     def add_altitude(self, altitude: float, precision: int = 100) -> None:
-        """Add altitude (pre is the precision)."""
+        # Add altitude (pre is the precision).
         ref = 0 if altitude > 0 else 1
         self._ef["GPS"][piexif.GPSIFD.GPSAltitude] = (
             int(abs(altitude) * precision),
@@ -110,7 +108,7 @@ class ExifEdit:
     def add_direction(
         self, direction: float, ref: str = "T", precision: int = 100
     ) -> None:
-        """Add image direction."""
+        # Add image direction.
         # normalize direction
         direction = direction % 360.0
         self._ef["GPS"][piexif.GPSIFD.GPSImgDirection] = (
@@ -204,7 +202,7 @@ class ExifEdit:
             return output.read()
 
     def write(self, filename: Path | None = None) -> None:
-        """Save exif data to file."""
+        # Save exif data to file.
         if filename is None:
             if not isinstance(self._filename_or_bytes, str):
                 raise ValueError("Unable to write image into bytes")

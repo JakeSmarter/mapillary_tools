@@ -595,9 +595,7 @@ def _normalize_import_paths(import_path: Path | T.Sequence[Path]) -> list[Path]:
 
 
 def _continue_or_fail(ex: Exception) -> Exception:
-    """
-    Wrap the exception, or re-raise if it is a fatal error (i.e. there is no point to continue)
-    """
+    # Wrap the exception, or re-raise if it is a fatal error (i.e. there is no point to continue)
 
     if isinstance(ex, uploader.SequenceError):
         return ex

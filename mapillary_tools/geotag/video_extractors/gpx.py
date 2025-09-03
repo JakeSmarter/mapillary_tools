@@ -74,9 +74,7 @@ class GPXVideoExtractor(BaseVideoExtractor):
 
     @classmethod
     def _rebase_times(cls, points: T.Sequence[geo.Point], offset: float = 0.0) -> None:
-        """
-        Rebase point times to start from **offset**
-        """
+        # Rebase point times to start from **offset**
         if points:
             first_timestamp = points[0].time
             for p in points:
@@ -86,17 +84,15 @@ class GPXVideoExtractor(BaseVideoExtractor):
     def _gpx_offset(
         cls, gpx_points: T.Sequence[geo.Point], video_gps_points: T.Sequence[geo.Point]
     ) -> float:
-        """
-        Calculate the offset that needs to be applied to the GPX points to sync with the video GPS points.
-
-        >>> gpx_points = [geo.Point(time=5, lat=1, lon=1, alt=None, angle=None)]
-        >>> GPXVideoExtractor._gpx_offset(gpx_points, gpx_points)
-        0.0
-        >>> GPXVideoExtractor._gpx_offset(gpx_points, [])
-        0.0
-        >>> GPXVideoExtractor._gpx_offset([], gpx_points)
-        0.0
-        """
+        # Calculate the offset that needs to be applied to the GPX points to sync with the video GPS points.
+        #
+        # >>> gpx_points = [geo.Point(time=5, lat=1, lon=1, alt=None, angle=None)]
+        # >>> GPXVideoExtractor._gpx_offset(gpx_points, gpx_points)
+        # 0.0
+        # >>> GPXVideoExtractor._gpx_offset(gpx_points, [])
+        # 0.0
+        # >>> GPXVideoExtractor._gpx_offset([], gpx_points)
+        # 0.0
         offset: float = 0.0
 
         if not gpx_points or not video_gps_points:

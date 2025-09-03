@@ -16,20 +16,18 @@ def _yes_or_no(val: str) -> bool:
 def _parse_scaled_integers(
     value: str, scale: dict[str, int] | None = None
 ) -> int | None:
-    """
-    >>> scale = {"": 1, "b": 1, "K": 1024, "M": 1024 * 1024, "G": 1024 * 1024 * 1024}
-    >>> _parse_scaled_integers("0", scale=scale)
-    0
-    >>> _parse_scaled_integers("10", scale=scale)
-    10
-    >>> _parse_scaled_integers("100B", scale=scale)
-    100
-    >>> _parse_scaled_integers("100k", scale=scale)
-    102400
-    >>> _parse_scaled_integers("100t", scale=scale)
-    Traceback (most recent call last):
-    ValueError: Expect valid integer ends with , b, K, M, G, but got 100T
-    """
+    # >>> scale = {"": 1, "b": 1, "K": 1024, "M": 1024 * 1024, "G": 1024 * 1024 * 1024}
+    # >>> _parse_scaled_integers("0", scale=scale)
+    # 0
+    # >>> _parse_scaled_integers("10", scale=scale)
+    # 10
+    # >>> _parse_scaled_integers("100B", scale=scale)
+    # 100
+    # >>> _parse_scaled_integers("100k", scale=scale)
+    # 102400
+    # >>> _parse_scaled_integers("100t", scale=scale)
+    # Traceback (most recent call last):
+    # ValueError: Expect valid integer ends with , b, K, M, G, but got 100T
 
     if scale is None:
         scale = {"": 1}

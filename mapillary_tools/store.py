@@ -1,11 +1,9 @@
-"""
-This module provides a persistent key-value store based on SQLite.
-
-This implementation is mostly copied from dbm.sqlite3 in the Python standard library,
-but works for Python >= 3.9, whereas dbm.sqlite3 is only available for Python 3.13.
-
-Source: https://github.com/python/cpython/blob/3.13/Lib/dbm/sqlite3.py
-"""
+# This module provides a persistent key-value store based on SQLite.
+#
+# This implementation is mostly copied from dbm.sqlite3 in the Python standard library,
+# but works for Python >= 3.9, whereas dbm.sqlite3 is only available for Python 3.13.
+#
+# Source: https://github.com/python/cpython/blob/3.13/Lib/dbm/sqlite3.py
 
 import os
 import sqlite3
@@ -37,19 +35,18 @@ def _normalize_uri(path):
 
 class KeyValueStore(MutableMapping):
     def __init__(self, path, /, *, flag="r", mode=0o666):
-        """Open a key-value database and return the object.
-
-        The 'path' parameter is the name of the database file.
-
-        The optional 'flag' parameter can be one of ...:
-            'r' (default): open an existing database for read only access
-            'w': open an existing database for read/write access
-            'c': create a database if it does not exist; open for read/write access
-            'n': always create a new, empty database; open for read/write access
-
-        The optional 'mode' parameter is the Unix file access mode of the database;
-        only used when creating a new database. Default: 0o666.
-        """
+        # Open a key-value database and return the object.
+        #
+        # The 'path' parameter is the name of the database file.
+        #
+        # The optional 'flag' parameter can be one of ...:
+        #     'r' (default): open an existing database for read only access
+        #     'w': open an existing database for read/write access
+        #     'c': create a database if it does not exist; open for read/write access
+        #     'n': always create a new, empty database; open for read/write access
+        #
+        # The optional 'mode' parameter is the Unix file access mode of the database;
+        # only used when creating a new database. Default: 0o666.
         path = os.fsdecode(path)
         if flag == "r":
             flag = "ro"

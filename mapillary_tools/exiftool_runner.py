@@ -6,9 +6,7 @@ from pathlib import Path
 
 
 class ExiftoolRunner:
-    """
-    Wrapper around ExifTool to run it in a subprocess
-    """
+    # Wrapper around ExifTool to run it in a subprocess
 
     def __init__(self, exiftool_executable: str = "exiftool", recursive: bool = False):
         self.exiftool_executable = exiftool_executable

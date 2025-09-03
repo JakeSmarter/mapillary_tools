@@ -57,9 +57,7 @@ class ImageMetadata(geo.Point):
                 self.md5sum = utils.md5sum_fp(image_data).hexdigest()
 
     def sort_key(self):
-        """
-        For sorting images in a sequence
-        """
+        # For sorting images in a sequence
         return (self.time, self.filename.name)
 
 
@@ -111,27 +109,25 @@ class BaseSerializer(abc.ABC):
 def combine_filetype_filters(
     a: set[FileType] | None, b: set[FileType] | None
 ) -> set[FileType] | None:
-    """
-    >>> combine_filetype_filters({FileType.CAMM}, {FileType.GOPRO})
-    set()
-
-    >>> combine_filetype_filters({FileType.CAMM}, {FileType.GOPRO, FileType.VIDEO})
-    {<FileType.CAMM: 'camm'>}
-
-    >>> combine_filetype_filters({FileType.GOPRO}, {FileType.GOPRO, FileType.VIDEO})
-    {<FileType.GOPRO: 'gopro'>}
-
-    >>> combine_filetype_filters({FileType.GOPRO}, {FileType.VIDEO})
-    {<FileType.GOPRO: 'gopro'>}
-
-    >>> expected = {FileType.CAMM, FileType.GOPRO}
-    >>> combine_filetype_filters({FileType.CAMM, FileType.GOPRO}, {FileType.VIDEO}) == expected
-    True
-
-    >>> expected = {FileType.CAMM, FileType.GOPRO, FileType.BLACKVUE, FileType.VIDEO}
-    >>> combine_filetype_filters({FileType.VIDEO}, {FileType.VIDEO}) == expected
-    True
-    """
+    # >>> combine_filetype_filters({FileType.CAMM}, {FileType.GOPRO})
+    # set()
+    #
+    # >>> combine_filetype_filters({FileType.CAMM}, {FileType.GOPRO, FileType.VIDEO})
+    # {<FileType.CAMM: 'camm'>}
+    #
+    # >>> combine_filetype_filters({FileType.GOPRO}, {FileType.GOPRO, FileType.VIDEO})
+    # {<FileType.GOPRO: 'gopro'>}
+    #
+    # >>> combine_filetype_filters({FileType.GOPRO}, {FileType.VIDEO})
+    # {<FileType.GOPRO: 'gopro'>}
+    #
+    # >>> expected = {FileType.CAMM, FileType.GOPRO}
+    # >>> combine_filetype_filters({FileType.CAMM, FileType.GOPRO}, {FileType.VIDEO}) == expected
+    # True
+    #
+    # >>> expected = {FileType.CAMM, FileType.GOPRO, FileType.BLACKVUE, FileType.VIDEO}
+    # >>> combine_filetype_filters({FileType.VIDEO}, {FileType.VIDEO}) == expected
+    # True
 
     if a is None:
         return b

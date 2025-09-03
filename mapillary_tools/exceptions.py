@@ -8,9 +8,7 @@ class MapillaryUserError(Exception):
 
 
 class MapillaryProcessError(MapillaryUserError):
-    """
-    Base exception for process specific errors
-    """
+    # Base exception for process specific errors
 
     exit_code = 6
 

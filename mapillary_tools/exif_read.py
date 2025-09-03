@@ -64,9 +64,7 @@ def _parse_coord_numeric(coord: str, ref: str | None) -> float | None:
 
 
 def _parse_coord_adobe(coord: str) -> float | None:
-    """
-    Parse Adobe coordinate format: <degrees,fractionalminutes[NSEW]>
-    """
+    # Parse Adobe coordinate format: <degrees,fractionalminutes[NSEW]>
     matches = ADOBE_FORMAT_REGEX.match(coord)
     if matches:
         deg = Ratio(int(matches.group(1)), 1)
@@ -178,14 +176,12 @@ def parse_gps_datetime_separately(
     timestr: str,
     default_tz: datetime.timezone | None = datetime.timezone.utc,
 ) -> datetime.datetime | None:
-    """
-    Parse GPSDateStamp and GPSTimeStamp and return the corresponding datetime object in GMT.
-
-    Valid examples:
-    - "2021:08:02" "07:57:06"
-    - "2022:06:10" "17:35:52.269367"
-    - "2022:06:10" "17:35:52.269367Z"
-    """
+    # Parse GPSDateStamp and GPSTimeStamp and return the corresponding datetime object in GMT.
+    #
+    # Valid examples:
+    # - "2021:08:02" "07:57:06"
+    # - "2022:06:10" "17:35:52.269367"
+    # - "2022:06:10" "17:35:52.269367Z"
     datestr = datestr.strip()
     dt = strptime_alternative_formats(datestr, ["%Y:%m:%d", "%Y-%m-%d"])
     if dt is None:
@@ -234,11 +230,9 @@ def parse_gps_datetime_separately(
 def parse_datetimestr_with_subsec_and_offset(
     dtstr: str, subsec: str | None = None, tz_offset: str | None = None
 ) -> datetime.datetime | None:
-    """
-    Convert dtstr "YYYY:mm:dd HH:MM:SS[.sss]" to a datetime object.
-    It handles time "24:00:00" as "00:00:00" of the next day.
-    Subsec "123" will be parsed as seconds 0.123 i.e microseconds 123000 and added to the datetime object.
-    """
+    # Convert dtstr "YYYY:mm:dd HH:MM:SS[.sss]" to a datetime object.
+    # It handles time "24:00:00" as "00:00:00" of the next day.
+    # Subsec "123" will be parsed as seconds 0.123 i.e microseconds 123000 and added to the datetime object.
     # handle dtstr
     dtstr = dtstr.strip()
 
@@ -383,9 +377,7 @@ class ExifReadFromXMP(ExifReadABC):
         return None
 
     def extract_gps_datetime(self) -> datetime.datetime | None:
-        """
-        Extract timestamp from GPS field.
-        """
+        #Extract timestamp from GPS field.
         timestr = self._extract_alternative_fields(["exif:GPSTimeStamp"], str)
         if not timestr:
             return None
@@ -482,10 +474,8 @@ class ExifReadFromXMP(ExifReadABC):
         fields: T.Iterable[str],
         field_type: type[_FIELD_TYPE],
     ) -> _FIELD_TYPE | None:
-        """
-        Extract a value for a list of ordered fields.
-        Return the value of the first existed field in the list
-        """
+        # Extract a value for a list of ordered fields.
+        # Return the value of the first existed field in the list
         for field in fields:
             ns, attr_or_tag = field.split(":")
             value = self._tags_or_attrs.get(
@@ -514,15 +504,13 @@ class ExifReadFromXMP(ExifReadABC):
 
 
 def extract_xmp_efficiently(fp) -> str | None:
-    """
-    Extract XMP metadata from a JPEG file efficiently by reading only necessary chunks.
-
-    Args:
-        image_path (str): Path to the JPEG image file
-
-    Returns:
-        str: Formatted XML string containing XMP metadata, or None if no XMP data found
-    """
+    # Extract XMP metadata from a JPEG file efficiently by reading only necessary chunks.
+    #
+    # Args:
+    #     image_path (str): Path to the JPEG image file
+    #
+    # Returns:
+    #     str: Formatted XML string containing XMP metadata, or None if no XMP data found
     # JPEG markers
     SOI_MARKER = b"\xff\xd8"  # Start of Image
     APP1_MARKER = b"\xff\xe1"  # Application Segment 1 (where XMP usually lives)
@@ -594,14 +582,10 @@ def extract_xmp_efficiently(fp) -> str | None:
 
 
 class ExifReadFromEXIF(ExifReadABC):
-    """
-    EXIF class for reading exif from an image
-    """
+    # EXIF class for reading exif from an image
 
     def __init__(self, path_or_stream: Path | T.BinaryIO) -> None:
-        """
-        Initialize EXIF object with FILE as filename or fileobj
-        """
+        # Initialize EXIF object with FILE as filename or fileobj
         if isinstance(path_or_stream, Path):
             with path_or_stream.open("rb") as fp:
                 try:
@@ -622,9 +606,7 @@ class ExifReadFromEXIF(ExifReadABC):
                 self.tags = {}
 
     def extract_altitude(self) -> float | None:
-        """
-        Extract altitude
-        """
+        # Extract altitude
         altitude = self._extract_alternative_fields(["GPS GPSAltitude"], float)
         if altitude is None:
             return None
@@ -635,9 +617,7 @@ class ExifReadFromEXIF(ExifReadABC):
         return altitude * altitude_ref.get(ref, 1)
 
     def extract_gps_datetime(self) -> datetime.datetime | None:
-        """
-        Extract timestamp from GPS field.
-        """
+        # Extract timestamp from GPS field.
         gpsdate = self._extract_alternative_fields(["GPS GPSDate"], str)
         if gpsdate is None:
             return None
@@ -712,9 +692,7 @@ class ExifReadFromEXIF(ExifReadABC):
         return None
 
     def extract_capture_time(self) -> datetime.datetime | None:
-        """
-        Extract capture time from EXIF DateTime tags
-        """
+        # Extract capture time from EXIF DateTime tags
         # Prefer GPS datetime over EXIF timestamp
         # NOTE: GPS datetime precision is usually 1 second, but this case is handled by the subsecond interpolation
         try:
@@ -731,9 +709,7 @@ class ExifReadFromEXIF(ExifReadABC):
         return None
 
     def extract_direction(self) -> float | None:
-        """
-        Extract image direction (i.e. compass, heading, bearing)
-        """
+        # Extract image direction (i.e. compass, heading, bearing)
         fields = [
             "GPS GPSImgDirection",
             "GPS GPSTrack",
@@ -763,9 +739,7 @@ class ExifReadFromEXIF(ExifReadABC):
         return None
 
     def extract_make(self) -> str | None:
-        """
-        Extract camera make
-        """
+        # Extract camera make
         make = self._extract_alternative_fields(
             ["Image Make", "EXIF Make", "EXIF LensMake"], str
         )
@@ -774,9 +748,7 @@ class ExifReadFromEXIF(ExifReadABC):
         return make.strip()
 
     def extract_model(self) -> str | None:
-        """
-        Extract camera model
-        """
+        # Extract camera model
         model = self._extract_alternative_fields(
             ["Image Model", "EXIF Model", "EXIF LensModel"], str
         )
@@ -785,25 +757,19 @@ class ExifReadFromEXIF(ExifReadABC):
         return model.strip()
 
     def extract_width(self) -> int | None:
-        """
-        Extract image width in pixels
-        """
+        # Extract image width in pixels
         return self._extract_alternative_fields(
             ["Image ImageWidth", "EXIF ExifImageWidth"], int
         )
 
     def extract_height(self) -> int | None:
-        """
-        Extract image height in pixels
-        """
+        # Extract image height in pixels
         return self._extract_alternative_fields(
             ["Image ImageLength", "EXIF ExifImageLength"], int
         )
 
     def extract_orientation(self) -> int:
-        """
-        Extract image orientation
-        """
+        # Extract image orientation
         orientation = self._extract_alternative_fields(["Image Orientation"], int)
         if orientation is None:
             orientation = 1
@@ -816,10 +782,8 @@ class ExifReadFromEXIF(ExifReadABC):
         fields: T.Iterable[str],
         field_type: type[_FIELD_TYPE],
     ) -> _FIELD_TYPE | None:
-        """
-        Extract a value for a list of ordered fields.
-        Return the value of the first existed field in the list
-        """
+        # Extract a value for a list of ordered fields.
+        # Return the value of the first existed field in the list
         for field in fields:
             tag = self.tags.get(field)
             if tag is None:
@@ -858,10 +822,8 @@ class ExifReadFromEXIF(ExifReadABC):
 
 
 class ExifRead(ExifReadFromEXIF):
-    """
-    Extract properties from EXIF first and then XMP
-    NOTE: For performance reasons, XMP is only extracted if EXIF does not contain the required fields
-    """
+    # Extract properties from EXIF first and then XMP
+    # NOTE: For performance reasons, XMP is only extracted if EXIF does not contain the required fields
 
     def __init__(self, path_or_stream: Path | T.BinaryIO) -> None:
         super().__init__(path_or_stream)

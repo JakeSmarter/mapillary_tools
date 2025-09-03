@@ -18,19 +18,19 @@ class Header(T.NamedTuple):
 
 
 class ParsingError(Exception):
-    """Base class for exceptions in this module."""
+    # Base class for exceptions in this module.
 
     pass
 
 
 class RangeError(ParsingError):
-    """Raise when less bytes available than expected"""
+    # Raise when less bytes available than expected
 
     pass
 
 
 class BoxNotFoundError(ParsingError):
-    """Raise when a required box is not found"""
+    # Raise when a required box is not found
 
     pass
 

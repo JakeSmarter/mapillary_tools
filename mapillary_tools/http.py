@@ -20,12 +20,10 @@ LOG = logging.getLogger(__name__)
 
 
 class HTTPSystemCertsAdapter(HTTPAdapter):
-    """
-    This adapter uses the system's certificate store instead of the certifi module.
-
-    The implementation is based on the project https://pypi.org/project/pip-system-certs/,
-    which has a system-wide effect.
-    """
+    # This adapter uses the system's certificate store instead of the certifi module.
+    #
+    # The implementation is based on the project https://pypi.org/project/pip-system-certs/,
+    # which has a system-wide effect.
 
     def init_poolmanager(self, *args, **kwargs):
         ssl_context = ssl.create_default_context()

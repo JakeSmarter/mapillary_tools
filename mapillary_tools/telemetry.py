@@ -15,12 +15,11 @@ class GPSFix(Enum):
 
 @dataclasses.dataclass(order=True)
 class TimestampedMeasurement:
-    """Base class for all telemetry measurements.
-
-    All telemetry measurements must have a timestamp in seconds.
-    This is an abstract base class - do not instantiate directly.
-    Instead use the concrete subclasses: AccelerationData, GyroscopeData, etc.
-    """
+    # Base class for all telemetry measurements.
+    #
+    # All telemetry measurements must have a timestamp in seconds.
+    # This is an abstract base class - do not instantiate directly.
+    # Instead use the concrete subclasses: AccelerationData, GyroscopeData, etc.
 
     time: float
 
@@ -47,7 +46,7 @@ class CAMMGPSPoint(TimestampedMeasurement, Point):
 
 @dataclasses.dataclass(order=True)
 class GyroscopeData(TimestampedMeasurement):
-    """Gyroscope signal in radians/seconds around XYZ axes of the camera."""
+    # Gyroscope signal in radians/seconds around XYZ axes of the camera.
 
     x: float
     y: float
@@ -56,7 +55,7 @@ class GyroscopeData(TimestampedMeasurement):
 
 @dataclasses.dataclass(order=True)
 class AccelerationData(TimestampedMeasurement):
-    """Accelerometer reading in meters/second^2 along XYZ axes of the camera."""
+    # Accelerometer reading in meters/second^2 along XYZ axes of the camera.
 
     x: float
     y: float
@@ -65,7 +64,7 @@ class AccelerationData(TimestampedMeasurement):
 
 @dataclasses.dataclass(order=True)
 class MagnetometerData(TimestampedMeasurement):
-    """Ambient magnetic field."""
+    # Ambient magnetic field.
 
     x: float
     y: float

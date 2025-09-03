@@ -23,9 +23,7 @@ def authenticate(
     jwt: str | None = None,
     delete: bool = False,
 ):
-    """
-    Prompt for authentication information and save it to the config file
-    """
+    # Prompt for authentication information and save it to the config file
 
     # We still have to accept --user_name for the back compatibility
     profile_name = user_name
@@ -88,10 +86,8 @@ def authenticate(
 def fetch_user_items(
     user_name: str | None = None, organization_key: str | None = None
 ) -> config.UserItem:
-    """
-    Read user information from the config file,
-    or prompt the user to authenticate if the specified profile does not exist
-    """
+    # Read user information from the config file,
+    # or prompt the user to authenticate if the specified profile does not exist
 
     # we still have to accept --user_name for the back compatibility
     profile_name = user_name
@@ -158,7 +154,7 @@ def _echo(*args, **kwargs):
 
 
 def _prompt(message: str) -> str:
-    """Display prompt on stderr and get input from stdin"""
+    # Display prompt on stderr and get input from stdin
     print(message, end="", file=sys.stderr, flush=True)
     return input()
 
@@ -174,9 +170,7 @@ def _validate_profile(user_items: config.UserItem) -> config.UserItem:
 
 
 def _verify_user_auth(user_items: config.UserItem) -> config.UserItem:
-    """
-    Verify that the user access token is valid
-    """
+    # Verify that the user access token is valid
     if constants._AUTH_VERIFICATION_DISABLED:
         return user_items
 

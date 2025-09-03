@@ -94,9 +94,7 @@ def index_rdf_description_by_path_from_xml_element(
 
 
 class ExifToolRead(exif_read.ExifReadABC):
-    """
-    Read exif from ExifTool XML output
-    """
+    # Read exif from ExifTool XML output
 
     def __init__(
         self,
@@ -105,9 +103,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         self.etree = etree
 
     def extract_altitude(self) -> float | None:
-        """
-        Extract altitude
-        """
+        # Extract altitude
         altitude = self._extract_alternative_fields(["GPS:GPSAltitude"], float)
         if altitude is None:
             return None
@@ -121,9 +117,7 @@ class ExifToolRead(exif_read.ExifReadABC):
     def _extract_gps_datetime(
         self, date_tags: T.Sequence[str], time_tags: T.Sequence[str]
     ) -> datetime.datetime | None:
-        """
-        Extract timestamp from GPS field.
-        """
+        # Extract timestamp from GPS field.
         gpsdate = self._extract_alternative_fields(date_tags, str)
         if gpsdate is None:
             return None
@@ -135,15 +129,11 @@ class ExifToolRead(exif_read.ExifReadABC):
         return exif_read.parse_gps_datetime_separately(gpsdate, gpstimestamp)
 
     def extract_gps_datetime(self) -> datetime.datetime | None:
-        """
-        Extract timestamp from GPS field.
-        """
+        # Extract timestamp from GPS field.
         return self._extract_gps_datetime(["GPS:GPSDateStamp"], ["GPS:GPSTimeStamp"])
 
     def extract_gps_datetime_from_xmp(self) -> datetime.datetime | None:
-        """
-        Extract timestamp from XMP GPS field.
-        """
+        # Extract timestamp from XMP GPS field.
         # example: <XMP-exif:GPSDateStamp>2021:09:14</XMP-exif:GPSDateStamp>
         # example: <XMP-exif:GPSDateTime>08:23:56.000000</XMP-exif:GPSDateTime>
         return self._extract_gps_datetime(
@@ -248,9 +238,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         return None
 
     def extract_capture_time(self) -> datetime.datetime | None:
-        """
-        Extract capture time from EXIF DateTime tags
-        """
+        # Extract capture time from EXIF DateTime tags
         # Prefer GPS datetime over EXIF timestamp
         # NOTE: GPS datetime precision is usually 1 second, but this case is handled by the subsecond interpolation
         try:
@@ -278,9 +266,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         return None
 
     def extract_direction(self) -> float | None:
-        """
-        Extract image direction (i.e. compass, heading, bearing)
-        """
+        # Extract image direction (i.e. compass, heading, bearing)
         # https://www.awaresystems.be/imaging/tiff/tifftags/privateifd/gps/gpsimgdirectionref.html
         return self._extract_alternative_fields(
             [
@@ -333,9 +319,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         return lon, lat
 
     def extract_make(self) -> str | None:
-        """
-        Extract camera make
-        """
+        # Extract camera make
         make = self._extract_alternative_fields(
             [
                 "IFD0:Make",
@@ -352,9 +336,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         return make.strip()
 
     def extract_model(self) -> str | None:
-        """
-        Extract camera model
-        """
+        # Extract camera model
         model = self._extract_alternative_fields(
             [
                 "IFD0:Model",
@@ -372,9 +354,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         return model.strip()
 
     def extract_width(self) -> int | None:
-        """
-        Extract image width in pixels
-        """
+        # Extract image width in pixels
         return self._extract_alternative_fields(
             [
                 "File:ImageWidth",
@@ -387,9 +367,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         )
 
     def extract_height(self) -> int | None:
-        """
-        Extract image height in pixels
-        """
+        # Extract image height in pixels
         return self._extract_alternative_fields(
             [
                 "File:ImageHeight",
@@ -402,9 +380,7 @@ class ExifToolRead(exif_read.ExifReadABC):
         )
 
     def extract_orientation(self) -> int:
-        """
-        Extract image orientation
-        """
+        # Extract image orientation
         orientation = self._extract_alternative_fields(
             [
                 "ExifIFD:Orientation",

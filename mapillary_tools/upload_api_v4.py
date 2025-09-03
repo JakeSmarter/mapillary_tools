@@ -25,9 +25,7 @@ MAPILLARY_UPLOAD_ENDPOINT = os.getenv(
 
 
 class UploadService:
-    """
-    Upload byte streams to the Upload Service.
-    """
+    # Upload byte streams to the Upload Service.
 
     user_access_token: str
     session_key: str
@@ -52,15 +50,13 @@ class UploadService:
     def chunkize_byte_stream(
         cls, stream: T.IO[bytes], chunk_size: int
     ) -> T.Generator[bytes, None, None]:
-        """
-        Chunkize a byte stream into chunks of the specified size.
-
-        >>> list(UploadService.chunkize_byte_stream(io.BytesIO(b"foo"), 1))
-        [b'f', b'o', b'o']
-
-        >>> list(UploadService.chunkize_byte_stream(io.BytesIO(b"foo"), 10))
-        [b'foo']
-        """
+        # Chunkize a byte stream into chunks of the specified size.
+        #
+        # >>> list(UploadService.chunkize_byte_stream(io.BytesIO(b"foo"), 1))
+        # [b'f', b'o', b'o']
+        #
+        # >>> list(UploadService.chunkize_byte_stream(io.BytesIO(b"foo"), 10))
+        # [b'foo']
 
         if chunk_size <= 0:
             raise ValueError("Expect positive chunk size")
@@ -75,27 +71,25 @@ class UploadService:
     def shift_chunks(
         cls, chunks: T.Iterable[bytes], offset: int
     ) -> T.Generator[bytes, None, None]:
-        """
-        Shift the chunks by the offset.
-
-        >>> list(UploadService.shift_chunks([b"foo", b"bar"], 0))
-        [b'foo', b'bar']
-
-        >>> list(UploadService.shift_chunks([b"foo", b"bar"], 1))
-        [b'oo', b'bar']
-
-        >>> list(UploadService.shift_chunks([b"foo", b"bar"], 3))
-        [b'bar']
-
-        >>> list(UploadService.shift_chunks([b"foo", b"bar"], 6))
-        []
-
-        >>> list(UploadService.shift_chunks([b"foo", b"bar"], 7))
-        []
-
-        >>> list(UploadService.shift_chunks([], 0))
-        []
-        """
+        # Shift the chunks by the offset.
+        #
+        # >>> list(UploadService.shift_chunks([b"foo", b"bar"], 0))
+        # [b'foo', b'bar']
+        #
+        # >>> list(UploadService.shift_chunks([b"foo", b"bar"], 1))
+        # [b'oo', b'bar']
+        #
+        # >>> list(UploadService.shift_chunks([b"foo", b"bar"], 3))
+        # [b'bar']
+        #
+        # >>> list(UploadService.shift_chunks([b"foo", b"bar"], 6))
+        # []
+        #
+        # >>> list(UploadService.shift_chunks([b"foo", b"bar"], 7))
+        # []
+        #
+        # >>> list(UploadService.shift_chunks([], 0))
+        # []
 
         if offset < 0:
             raise ValueError(f"Expect non-negative offset but got {offset}")
@@ -144,9 +138,7 @@ class UploadService:
         offset: int,
         read_timeout: float | None = None,
     ) -> str:
-        """
-        Upload the chunks that must already be shifted by the offset (e.g. fp.seek(offset, io.SEEK_SET))
-        """
+        # Upload the chunks that must already be shifted by the offset (e.g. fp.seek(offset, io.SEEK_SET))
 
         url = f"{MAPILLARY_UPLOAD_ENDPOINT}/{self.session_key}"
         headers = {
@@ -171,10 +163,8 @@ class UploadService:
 
 # A mock class for testing only
 class FakeUploadService(UploadService):
-    """
-    A mock upload service that simulates the upload process for testing purposes.
-    It writes the uploaded data to a file in a temporary directory and generates a fake file handle.
-    """
+    # A mock upload service that simulates the upload process for testing purposes.
+    # It writes the uploaded data to a file in a temporary directory and generates a fake file handle.
 
     FILE_HANDLE_DIR: str = "file_handles"
 
@@ -238,10 +228,8 @@ class FakeUploadService(UploadService):
         return self._upload_path
 
     def _randomly_raise_transient_error(self):
-        """
-        Randomly raise a transient error based on the configured error ratio.
-        This is for testing purposes only.
-        """
+        # Randomly raise a transient error based on the configured error ratio.
+        # This is for testing purposes only.
         if random.random() <= self._transient_error_ratio:
             raise requests.ConnectionError(
                 f"[TEST ONLY]: Transient error with ratio {self._transient_error_ratio}"

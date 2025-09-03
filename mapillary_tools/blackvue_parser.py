@@ -82,12 +82,10 @@ def extract_camera_model(fp: T.BinaryIO) -> str:
 
 
 def _extract_camera_model_from_cprt(cprt_bytes: bytes) -> str:
-    """
-    >>> _extract_camera_model_from_cprt(b' {"model":"DR900X Plus","ver":0.918,"lang":"English","direct":1,"psn":"","temp":34,"GPS":1}')
-    'DR900X Plus'
-    >>> _extract_camera_model_from_cprt(b' Pittasoft Co., Ltd.;DR900S-1CH;1.008;English;1;D90SS1HAE00661;T69;')
-    'DR900S-1CH'
-    """
+    # >>> _extract_camera_model_from_cprt(b' {"model":"DR900X Plus","ver":0.918,"lang":"English","direct":1,"psn":"","temp":34,"GPS":1}')
+    # 'DR900X Plus'
+    # >>> _extract_camera_model_from_cprt(b' Pittasoft Co., Ltd.;DR900S-1CH;1.008;English;1;D90SS1HAE00661;T69;')
+    # 'DR900S-1CH'
     cprt_bytes = cprt_bytes.strip().strip(b"\x00")
 
     try:
@@ -115,22 +113,20 @@ def _extract_camera_model_from_cprt(cprt_bytes: bytes) -> str:
 
 
 def _parse_gps_box(gps_data: bytes) -> list[geo.Point]:
-    """
-    >>> list(_parse_gps_box(b"[1623057074211]$GPGGA,202530.00,5109.0262,N,11401.8407,W,5,40,0.5,1097.36,M,-17.00,M,18,TSTR*61"))
-    [Point(time=1623057074211, lat=51.150436666666664, lon=-114.03067833333333, alt=1097.36, angle=None)]
-
-    >>> list(_parse_gps_box(b"[1629874404069]$GNGGA,175322.00,3244.53126,N,11710.97811,W,1,12,0.84,17.4,M,-34.0,M,,*45"))
-    [Point(time=1629874404069, lat=32.742187666666666, lon=-117.1829685, alt=17.4, angle=None)]
-
-    >>> list(_parse_gps_box(b"[1629874404069]$GNGLL,4404.14012,N,12118.85993,W,001037.00,A,A*67"))
-    [Point(time=1629874404069, lat=44.069002, lon=-121.31433216666667, alt=None, angle=None)]
-
-    >>> list(_parse_gps_box(b"[1629874404069]$GNRMC,001031.00,A,4404.13993,N,12118.86023,W,0.146,,100117,,,A*7B"))
-    [Point(time=1629874404069, lat=44.06899883333333, lon=-121.31433716666666, alt=None, angle=None)]
-
-    >>> list(_parse_gps_box(b"[1623057074211]$GPVTG,,T,,M,0.078,N,0.144,K,D*28[1623057075215]"))
-    []
-    """
+    # >>> list(_parse_gps_box(b"[1623057074211]$GPGGA,202530.00,5109.0262,N,11401.8407,W,5,40,0.5,1097.36,M,-17.00,M,18,TSTR*61"))
+    # [Point(time=1623057074211, lat=51.150436666666664, lon=-114.03067833333333, alt=1097.36, angle=None)]
+    #
+    # >>> list(_parse_gps_box(b"[1629874404069]$GNGGA,175322.00,3244.53126,N,11710.97811,W,1,12,0.84,17.4,M,-34.0,M,,*45"))
+    # [Point(time=1629874404069, lat=32.742187666666666, lon=-117.1829685, alt=17.4, angle=None)]
+    #
+    # >>> list(_parse_gps_box(b"[1629874404069]$GNGLL,4404.14012,N,12118.85993,W,001037.00,A,A*67"))
+    # [Point(time=1629874404069, lat=44.069002, lon=-121.31433216666667, alt=None, angle=None)]
+    #
+    # >>> list(_parse_gps_box(b"[1629874404069]$GNRMC,001031.00,A,4404.13993,N,12118.86023,W,0.146,,100117,,,A*7B"))
+    # [Point(time=1629874404069, lat=44.06899883333333, lon=-121.31433716666666, alt=None, angle=None)]
+    #
+    # >>> list(_parse_gps_box(b"[1623057074211]$GPVTG,,T,,M,0.078,N,0.144,K,D*28[1623057075215]"))
+    # []
     points_by_sentence_type: dict[str, list[geo.Point]] = {}
 
     for line_bytes in gps_data.splitlines():

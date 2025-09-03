@@ -37,14 +37,12 @@ PointLike = T.TypeVar("PointLike", bound=Point)
 
 
 def gps_distance(latlon_1: tuple[float, float], latlon_2: tuple[float, float]) -> float:
-    """
-    Distance between two (lat,lon) pairs.
-
-    >>> p1 = (42.1, -11.1)
-    >>> p2 = (42.2, -11.3)
-    >>> 19000 < gps_distance(p1, p2) < 20000
-    True
-    """
+    # Distance between two (lat,lon) pairs.
+    #
+    # >>> p1 = (42.1, -11.1)
+    # >>> p2 = (42.2, -11.3)
+    # >>> 19000 < gps_distance(p1, p2) < 20000
+    # True
     x1, y1, z1 = _ecef_from_lla2(latlon_1[0], latlon_1[1])
     x2, y2, z2 = _ecef_from_lla2(latlon_2[0], latlon_2[1])
 
@@ -71,12 +69,10 @@ def compute_bearing(
     latlon_1: tuple[float, float],
     latlon_2: tuple[float, float],
 ) -> float:
-    """
-    Get the compass bearing from start to end.
-
-    Formula from
-    http://www.movable-type.co.uk/scripts/latlong.html
-    """
+    # Get the compass bearing from start to end.
+    #
+    # Formula from
+    # http://www.movable-type.co.uk/scripts/latlong.html
     start_lat, start_lon = latlon_1
     end_lat, end_lon = latlon_2
 
@@ -104,9 +100,7 @@ def compute_bearing(
 
 
 def diff_bearing(b1: float, b2: float) -> float:
-    """
-    Compute difference between two bearings
-    """
+    # Compute difference between two bearings
     d = abs(b2 - b1)
     d = 360 - d if d > 180 else d
     return d
@@ -117,7 +111,7 @@ _IT = T.TypeVar("_IT")
 
 # http://stackoverflow.com/a/5434936
 def pairwise(iterable: T.Iterable[_IT]) -> T.Iterable[tuple[_IT, _IT]]:
-    """s -> (s0,s1), (s1,s2), (s2, s3), ..."""
+    # s -> (s0,s1), (s1,s2), (s2, s3), ...
     a, b = itertools.tee(iterable)
     next(b, None)
     return zip(a, b)
@@ -142,9 +136,7 @@ def as_unix_time(dt: datetime.datetime | int | float) -> float:
 if sys.version_info < (3, 10):
 
     def interpolate(points: T.Sequence[Point], t: float, lo: int = 0) -> Point:
-        """
-        Interpolate or extrapolate the point at time t along the sequence of points (sorted by time).
-        """
+        # Interpolate or extrapolate the point at time t along the sequence of points (sorted by time).
         if not points:
             raise ValueError("Expect non-empty points")
 
@@ -158,9 +150,7 @@ if sys.version_info < (3, 10):
 else:
 
     def interpolate(points: T.Sequence[Point], t: float, lo: int = 0) -> Point:
-        """
-        Interpolate or extrapolate the point at time t along the sequence of points (sorted by time).
-        """
+        # Interpolate or extrapolate the point at time t along the sequence of points (sorted by time).
         if not points:
             raise ValueError("Expect non-empty points")
 
@@ -173,9 +163,7 @@ else:
 
 
 class Interpolator:
-    """
-    Interpolator for interpolating a sequence of timestamps incrementally.
-    """
+    # Interpolator for interpolating a sequence of timestamps incrementally.
 
     tracks: T.Sequence[T.Sequence[Point]]
     track_idx: int
@@ -206,9 +194,7 @@ class Interpolator:
     def _lsearch_left(
         track: T.Sequence[Point], t: float, lo: int = 0, hi: int | None = None
     ) -> int:
-        """
-        similar to bisect.bisect_left, but faster in the incremental search case
-        """
+        # similar to bisect.bisect_left, but faster in the incremental search case
         assert 0 <= lo, "expect non-negative lower bound"
         if hi is None:
             hi = len(track)
@@ -298,14 +284,12 @@ def interpolate_directions_if_none(sequence: T.Sequence[PointLike]) -> None:
 
 
 def _ecef_from_lla2(lat: float, lon: float) -> tuple[float, float, float]:
-    """
-    Compute ECEF XYZ from latitude and longitude.
+    # Compute ECEF XYZ from latitude and longitude.
+    #
+    # All using the WGS94 model.
+    # Altitude is the distance to the WGS94 ellipsoid.
+    # Check results here http://www.oc.nps.edu/oc2902w/coord/llhxyz.htm
 
-    All using the WGS94 model.
-    Altitude is the distance to the WGS94 ellipsoid.
-    Check results here http://www.oc.nps.edu/oc2902w/coord/llhxyz.htm
-
-    """
     lat = math.radians(lat)
     lon = math.radians(lon)
     cos_lat = math.cos(lat)
@@ -337,10 +321,8 @@ def _interpolate_segment(start: Point, end: Point, t: float) -> Point:
 
 
 def _interpolate_at_segment_idx(points: T.Sequence[Point], t: float, idx: int) -> Point:
-    """
-    Interpolate time t along the segment between idx - 1 and idx.
-    If idx is out of range, extrapolate it to the nearest segment (first or last).
-    """
+    # Interpolate time t along the segment between idx - 1 and idx.
+    # If idx is out of range, extrapolate it to the nearest segment (first or last).
 
     if len(points) == 1:
         start, end = points[0], points[0]

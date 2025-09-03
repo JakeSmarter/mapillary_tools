@@ -79,10 +79,8 @@ def write_history(
 
 
 def _retry_on_database_lock_error(fn):
-    """
-    Decorator to retry a function if it raises a sqlite3.OperationalError with
-    "database is locked" in the message.
-    """
+    # Decorator to retry a function if it raises a sqlite3.OperationalError with
+    # "database is locked" in the message.
 
     @wraps(fn)
     def wrapper(*args, **kwargs):

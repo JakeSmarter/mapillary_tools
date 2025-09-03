@@ -7,9 +7,7 @@ from ... import types
 
 
 class BaseImageExtractor(abc.ABC):
-    """
-    Extracts metadata from an image file.
-    """
+    # Extracts metadata from an image file.
 
     def __init__(self, image_path: Path):
         self.image_path = image_path

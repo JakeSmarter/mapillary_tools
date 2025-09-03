@@ -220,9 +220,7 @@ def _sample_video_stream_by_distance(
     video_track_parser: mp4_sample_parser.TrackBoxParser,
     sample_distance: float,
 ) -> dict[int, tuple[mp4_sample_parser.Sample, geo.Point]]:
-    """
-    Locate video frames along the track (points), then resample them by the minimal sample_distance, and return the sparse frames.
-    """
+    # Locate video frames along the track (points), then resample them by the minimal sample_distance, and return the sparse frames.
 
     LOG.info("Extracting video samples")
     sorted_samples = list(video_track_parser.extract_samples())

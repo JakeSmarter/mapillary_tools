@@ -77,9 +77,7 @@ class UploadOptions:
 
 
 class UploaderProgress(T.TypedDict, total=True):
-    """
-    Progress data that Uploader cares about.
-    """
+    # Progress data that Uploader cares about.
 
     # The size, in bytes, of the last chunk that has been read and upload
     chunk_size: int
@@ -108,7 +106,7 @@ class UploaderProgress(T.TypedDict, total=True):
 
 
 class SequenceProgress(T.TypedDict, total=False):
-    """Progress data at sequence level"""
+    # Progress data at sequence level
 
     # Used to check if it is uploaded or not
     sequence_md5sum: Required[str]
@@ -141,11 +139,9 @@ class Progress(SequenceProgress, UploaderProgress):
 
 
 class SequenceError(Exception):
-    """
-    Base class for sequence specific errors. These errors will cause the
-    current sequence upload to fail but will not interrupt the overall upload
-    process for other sequences.
-    """
+    # Base class for sequence specific errors. These errors will cause the
+    # current sequence upload to fail but will not interrupt the overall upload
+    # process for other sequences.
 
     pass
 
@@ -353,9 +349,7 @@ class ZipUploader:
     def zip_images(
         cls, metadatas: T.Sequence[types.ImageMetadata], zip_dir: Path
     ) -> None:
-        """
-        Group images into sequences and zip each sequence into a zipfile.
-        """
+        # Group images into sequences and zip each sequence into a zipfile.
         sequences = types.group_and_sort_images(metadatas)
         os.makedirs(zip_dir, exist_ok=True)
 
@@ -458,10 +452,8 @@ class ZipUploader:
         sequence: T.Sequence[types.ImageMetadata],
         zip_fp: T.IO[bytes],
     ) -> str:
-        """
-        Write a sequence of ImageMetadata into the zipfile handle.
-        The sequence has to be one sequence and sorted.
-        """
+        # Write a sequence of ImageMetadata into the zipfile handle.
+        # The sequence has to be one sequence and sorted.
 
         sequence_groups = types.group_and_sort_images(sequence)
         assert len(sequence_groups) == 1, (
@@ -892,7 +884,7 @@ class Uploader:
         cluster_filetype: api_v4.ClusterFileType,
         progress: dict[str, T.Any] | None = None,
     ) -> str:
-        """Finish upload with safe retries guraranteed"""
+        # Finish upload with safe retries guraranteed
         if progress is None:
             progress = {}
 
@@ -1015,7 +1007,7 @@ class Uploader:
         session_key: str,
         progress: UploaderProgress | None = None,
     ) -> str:
-        """Upload the stream with safe retries guraranteed"""
+        # Upload the stream with safe retries guraranteed
         if progress is None:
             progress = T.cast(UploaderProgress, {})
 
@@ -1092,61 +1084,59 @@ def _is_immediate_retriable_exception(ex: BaseException) -> bool:
 
 
 def _is_retriable_exception(ex: BaseException) -> tuple[bool, int]:
-    """
-    Determine if an exception should be retried and how long to wait.
-
-    Args:
-        ex: Exception to check for retryability
-
-    Returns:
-        Tuple of (retriable, retry_after_sec) where:
-        - retriable: True if the exception should be retried
-        - retry_after_sec: Seconds to wait before retry (>= 0)
-
-    Examples:
-    >>> resp = requests.Response()
-    >>> resp._content = b"foo"
-    >>> resp.status_code = 400
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (False, 0)
-    >>> resp._content = b'{"backoff": 13000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
-    >>> resp.status_code = 400
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 13)
-    >>> resp._content = b'{"backoff": "foo", "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
-    >>> resp.status_code = 400
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 10)
-    >>> resp._content = b'{"debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
-    >>> resp.status_code = 400
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 10)
-    >>> resp._content = b"foo"
-    >>> resp.status_code = 429
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 10)
-    >>> resp._content = b"foo"
-    >>> resp.status_code = 429
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 10)
-    >>> resp._content = b'{"backoff": 12000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
-    >>> resp.status_code = 429
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 12)
-    >>> resp._content = b'{"backoff": 12000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
-    >>> resp.headers = {"Retry-After": "1"}
-    >>> resp.status_code = 503
-    >>> ex = requests.HTTPError("error", response=resp)
-    >>> _is_retriable_exception(ex)
-    (True, 1)
-    """
+    # Determine if an exception should be retried and how long to wait.
+    #
+    # Args:
+    #     ex: Exception to check for retryability
+    #
+    # Returns:
+    #     Tuple of (retriable, retry_after_sec) where:
+    #     - retriable: True if the exception should be retried
+    #     - retry_after_sec: Seconds to wait before retry (>= 0)
+    #
+    # Examples:
+    # >>> resp = requests.Response()
+    # >>> resp._content = b"foo"
+    # >>> resp.status_code = 400
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (False, 0)
+    # >>> resp._content = b'{"backoff": 13000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
+    # >>> resp.status_code = 400
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 13)
+    # >>> resp._content = b'{"backoff": "foo", "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
+    # >>> resp.status_code = 400
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 10)
+    # >>> resp._content = b'{"debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
+    # >>> resp.status_code = 400
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 10)
+    # >>> resp._content = b"foo"
+    # >>> resp.status_code = 429
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 10)
+    # >>> resp._content = b"foo"
+    # >>> resp.status_code = 429
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 10)
+    # >>> resp._content = b'{"backoff": 12000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
+    # >>> resp.status_code = 429
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 12)
+    # >>> resp._content = b'{"backoff": 12000, "debug_info": {"retriable": false, "type": "RequestRateLimitedError", "message": "Request rate limit has been exceeded"}}'
+    # >>> resp.headers = {"Retry-After": "1"}
+    # >>> resp.status_code = 503
+    # >>> ex = requests.HTTPError("error", response=resp)
+    # >>> _is_retriable_exception(ex)
+    # (True, 1)
 
     DEFAULT_RETRY_AFTER_RATE_LIMIT_SEC = 10
 
@@ -1222,30 +1212,28 @@ def _parse_backoff(backoff: T.Any) -> int | None:
 
 
 def _parse_retry_after_from_header(resp: requests.Response) -> int | None:
-    """
-    Parse Retry-After header from HTTP response.
-    See See https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After
-
-    Args:
-        resp: HTTP response object with headers
-
-    Returns:
-        Number of seconds to wait (>= 0) or None if header missing/invalid.
-
-    Examples:
-    >>> resp = requests.Response()
-    >>> resp.headers = {"Retry-After": "1"}
-    >>> _parse_retry_after_from_header(resp)
-    1
-    >>> resp.headers = {"Retry-After": "-1"}
-    >>> _parse_retry_after_from_header(resp)
-    0
-    >>> resp.headers = {"Retry-After": "Wed, 21 Oct 2015 07:28:00 GMT"}
-    >>> _parse_retry_after_from_header(resp)
-    0
-    >>> resp.headers = {"Retry-After": "Wed, 21 Oct 2315 07:28:00"}
-    >>> _parse_retry_after_from_header(resp)
-    """
+    # Parse Retry-After header from HTTP response.
+    # See See https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Retry-After
+    #
+    # Args:
+    #     resp: HTTP response object with headers
+    #
+    # Returns:
+    #     Number of seconds to wait (>= 0) or None if header missing/invalid.
+    #
+    # Examples:
+    # >>> resp = requests.Response()
+    # >>> resp.headers = {"Retry-After": "1"}
+    # >>> _parse_retry_after_from_header(resp)
+    # 1
+    # >>> resp.headers = {"Retry-After": "-1"}
+    # >>> _parse_retry_after_from_header(resp)
+    # 0
+    # >>> resp.headers = {"Retry-After": "Wed, 21 Oct 2015 07:28:00 GMT"}
+    # >>> _parse_retry_after_from_header(resp)
+    # 0
+    # >>> resp.headers = {"Retry-After": "Wed, 21 Oct 2315 07:28:00"}
+    # >>> _parse_retry_after_from_header(resp)
 
     value = resp.headers.get("Retry-After")
     if value is None:
@@ -1340,7 +1328,7 @@ def _build_upload_cache_path(upload_options: UploadOptions) -> Path:
 def _maybe_create_persistent_cache_instance(
     upload_options: UploadOptions,
 ) -> history.PersistentCache | None:
-    """Create a persistent cache instance if caching is enabled."""
+    # Create a persistent cache instance if caching is enabled.
 
     if upload_options.dry_run:
         LOG.debug("Dry-run mode enabled, skipping caching upload file handles")

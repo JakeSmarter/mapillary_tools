@@ -5,10 +5,8 @@ from .. import constants, geo
 from ..telemetry import GPSPoint
 from . import gps_filter
 
-"""
-This module was originally used for GoPro GPS data (GPMF) filtering,
-but it now can be used for any GPS data with fixes, precisions, and ground speeds.
-"""
+# This module was originally used for GoPro GPS data (GPMF) filtering,
+# but it now can be used for any GPS data with fixes, precisions, and ground speeds.
 
 LOG = logging.getLogger(__name__)
 

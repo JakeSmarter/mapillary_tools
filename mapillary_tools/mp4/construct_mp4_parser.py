@@ -375,11 +375,9 @@ class BoxNotFoundError(Exception):
 
 
 class Box64ConstructBuilder:
-    """
-    Build a box struct that **parses** MP4 boxes with both 32-bit and 64-bit sizes.
-
-    NOTE: Do not build data with this struct. For building, use Box32StructBuilder instead.
-    """
+    # Build a box struct that **parses** MP4 boxes with both 32-bit and 64-bit sizes.
+    #
+    # NOTE: Do not build data with this struct. For building, use Box32StructBuilder instead.
 
     _box: C.Construct | None
 
@@ -448,12 +446,10 @@ class Box64ConstructBuilder:
 
 
 class Box32ConstructBuilder(Box64ConstructBuilder):
-    """
-    Build a box struct that parses or builds MP4 boxes with 32-bit size only.
-
-    NOTE: The struct does not handle extended size correctly.
-    To parse boxes with extended size, use Box64StructBuilder instead.
-    """
+    # Build a box struct that parses or builds MP4 boxes with 32-bit size only.
+    #
+    # NOTE: The struct does not handle extended size correctly.
+    # To parse boxes with extended size, use Box64StructBuilder instead.
 
     @property
     def Box(self) -> C.Construct:

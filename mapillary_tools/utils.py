@@ -237,7 +237,7 @@ def mp_map_maybe(
 def configure_logger(
     logger: logging.Logger | None = None, level: int = logging.INFO
 ) -> logging.Logger:
-    """Configure logging in each worker process"""
+    # Configure logging in each worker process
     if logger is None:
         # Root logger if app name is ""
         logger = logging.getLogger(get_app_name())

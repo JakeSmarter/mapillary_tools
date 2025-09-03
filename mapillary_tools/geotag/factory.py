@@ -24,15 +24,13 @@ LOG = logging.getLogger(__name__)
 
 
 def parse_source_option(source: str) -> list[SourceOption]:
-    """
-    Given a source string, parse it into a list of GeotagOptions objects.
-
-    Examples:
-        "native" -> [SourceOption(SourceType.NATIVE)]
-        "gpx,exif" -> [SourceOption(SourceType.GPX), SourceOption(SourceType.EXIF)]
-        "exif,gpx" -> [SourceOption(SourceType.EXIF), SourceOption(SourceType.GPX)]
-        '{"source": "gpx"}' -> [SourceOption(SourceType.GPX)]
-    """
+    # Given a source string, parse it into a list of GeotagOptions objects.
+    #
+    # Examples:
+    #     "native" -> [SourceOption(SourceType.NATIVE)]
+    #     "gpx,exif" -> [SourceOption(SourceType.GPX), SourceOption(SourceType.EXIF)]
+    #     "exif,gpx" -> [SourceOption(SourceType.EXIF), SourceOption(SourceType.GPX)]
+    #     '{"source": "gpx"}' -> [SourceOption(SourceType.GPX)]
 
     try:
         source_type = SourceType(SOURCE_TYPE_ALIAS.get(source, source))
@@ -166,9 +164,7 @@ def _ensure_source_path(option: SourceOption) -> Path:
 
 
 def _build_image_geotag(option: SourceOption) -> base.GeotagImagesFromGeneric | None:
-    """
-    Build a GeotagImagesFromGeneric object based on the provided option.
-    """
+    # Build a GeotagImagesFromGeneric object based on the provided option.
     if option.interpolation is None:
         interpolation = InterpolationOption()
     else:
@@ -224,50 +220,48 @@ def _build_image_geotag(option: SourceOption) -> base.GeotagImagesFromGeneric | 
 
 
 def _build_video_geotag(option: SourceOption) -> base.GeotagVideosFromGeneric | None:
-    """
-    Build a GeotagVideosFromGeneric object based on the provided option.
-
-    Examples:
-        >>> from pathlib import Path
-        >>> from mapillary_tools.geotag.options import SourceOption, SourceType
-        >>> opt = SourceOption(SourceType.NATIVE)
-        >>> geotagger = _build_video_geotag(opt)
-        >>> geotagger.__class__.__name__
-        'GeotagVideosFromVideo'
-
-        >>> opt = SourceOption(SourceType.EXIFTOOL_RUNTIME)
-        >>> geotagger = _build_video_geotag(opt)
-        >>> geotagger.__class__.__name__
-        'GeotagVideosFromExifToolRunner'
-
-        >>> opt = SourceOption(SourceType.EXIFTOOL_XML, source_path=Path("/tmp/test.xml"))
-        >>> geotagger = _build_video_geotag(opt)
-        >>> geotagger.__class__.__name__
-        'GeotagVideosFromExifToolXML'
-
-        >>> opt = SourceOption(SourceType.GPX, source_path=Path("/tmp/test.gpx"))
-        >>> geotagger = _build_video_geotag(opt)
-        >>> geotagger.__class__.__name__
-        'GeotagVideosFromGPX'
-
-        >>> opt = SourceOption(SourceType.NMEA, source_path=Path("/tmp/test.nmea"))
-        >>> _build_video_geotag(opt) is None
-        True
-
-        >>> opt = SourceOption(SourceType.EXIF)
-        >>> _build_video_geotag(opt) is None
-        True
-
-        >>> opt = SourceOption(SourceType.GOPRO)
-        >>> _build_video_geotag(opt) is None
-        True
-
-        >>> try:
-        ...     _build_video_geotag(SourceOption("invalid"))
-        ... except ValueError as e:
-        ...     "Invalid geotag source" in str(e)
-        True
-    """
+    # Build a GeotagVideosFromGeneric object based on the provided option.
+    #
+    # Examples:
+    #     >>> from pathlib import Path
+    #     >>> from mapillary_tools.geotag.options import SourceOption, SourceType
+    #     >>> opt = SourceOption(SourceType.NATIVE)
+    #     >>> geotagger = _build_video_geotag(opt)
+    #     >>> geotagger.__class__.__name__
+    #     'GeotagVideosFromVideo'
+    #
+    #     >>> opt = SourceOption(SourceType.EXIFTOOL_RUNTIME)
+    #     >>> geotagger = _build_video_geotag(opt)
+    #     >>> geotagger.__class__.__name__
+    #     'GeotagVideosFromExifToolRunner'
+    #
+    #     >>> opt = SourceOption(SourceType.EXIFTOOL_XML, source_path=Path("/tmp/test.xml"))
+    #     >>> geotagger = _build_video_geotag(opt)
+    #     >>> geotagger.__class__.__name__
+    #     'GeotagVideosFromExifToolXML'
+    #
+    #     >>> opt = SourceOption(SourceType.GPX, source_path=Path("/tmp/test.gpx"))
+    #     >>> geotagger = _build_video_geotag(opt)
+    #     >>> geotagger.__class__.__name__
+    #     'GeotagVideosFromGPX'
+    #
+    #     >>> opt = SourceOption(SourceType.NMEA, source_path=Path("/tmp/test.nmea"))
+    #     >>> _build_video_geotag(opt) is None
+    #     True
+    #
+    #     >>> opt = SourceOption(SourceType.EXIF)
+    #     >>> _build_video_geotag(opt) is None
+    #     True
+    #
+    #     >>> opt = SourceOption(SourceType.GOPRO)
+    #     >>> _build_video_geotag(opt) is None
+    #     True
+    #
+    #     >>> try:
+    #     ...     _build_video_geotag(SourceOption("invalid"))
+    #     ... except ValueError as e:
+    #     ...     "Invalid geotag source" in str(e)
+    #     True
     if option.source is SourceType.NATIVE:
         return geotag_videos_from_video.GeotagVideosFromVideo(
             num_processes=option.num_processes, filetypes=option.filetypes

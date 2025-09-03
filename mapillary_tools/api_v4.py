@@ -20,10 +20,8 @@ REQUESTS_TIMEOUT: float = 60  # 1 minutes
 
 
 class HTTPContentError(Exception):
-    """
-    Raised when the HTTP response is ok (200) but the content is not as expected
-    e.g. not JSON or not a valid response.
-    """
+    # Raised when the HTTP response is ok (200) but the content is not as expected
+    # e.g. not JSON or not a valid response.
 
     def __init__(self, message: str, response: requests.Response):
         self.response = response
@@ -167,9 +165,7 @@ def finish_upload(
 
 
 def jsonify_response(resp: requests.Response) -> T.Any:
-    """
-    Convert the response to JSON, raising HTTPContentError if the response is not JSON.
-    """
+    # Convert the response to JSON, raising HTTPContentError if the response is not JSON.
     try:
         return resp.json()
     except requests.JSONDecodeError as ex:

@@ -11,9 +11,7 @@ Decider = T.Callable[[geo.Point, geo.Point], bool]
 
 
 def calculate_point_speed(p1: geo.Point, p2: geo.Point) -> float:
-    """
-    Calculate the ground speed between two points (from p1 to p2).
-    """
+    # Calculate the ground speed between two points (from p1 to p2).
     s = geo.gps_distance((p1.lat, p1.lon), (p2.lat, p2.lon))
     t = abs(p2.time - p1.time)
     try:
@@ -23,11 +21,9 @@ def calculate_point_speed(p1: geo.Point, p2: geo.Point) -> float:
 
 
 def upper_whisker(values: T.Sequence[float]) -> float:
-    """
-    Calculate the upper whisker (i.e. Q3 + IRQ * 1.5) of the input values.
-    Values larger than it are considered as outliers.
-    See https://en.wikipedia.org/wiki/Interquartile_range
-    """
+    # Calculate the upper whisker (i.e. Q3 + IRQ * 1.5) of the input values.
+    # Values larger than it are considered as outliers.
+    # See https://en.wikipedia.org/wiki/Interquartile_range
 
     values = sorted(values)
     n = len(values)
@@ -66,7 +62,7 @@ def split_if(
 def distance_gt(
     max_distance: float,
 ) -> Decider:
-    """Return a callable that checks if two points are farther than the given distance."""
+    # Return a callable that checks if two points are farther than the given distance.
 
     def _split_or_not(p1, p2):
         distance = geo.gps_distance((p1.lat, p1.lon), (p2.lat, p2.lon))
@@ -76,7 +72,7 @@ def distance_gt(
 
 
 def speed_le(max_speed: float) -> Decider:
-    """Return a callable that checks if the speed between two points are slower than the given speed."""
+    # Return a callable that checks if the speed between two points are slower than the given speed.
 
     def _split_or_not(p1, p2):
         speed = calculate_point_speed(p1, p2)
@@ -99,14 +95,12 @@ def dbscan(
     sequences: T.Sequence[PointSequence],
     merge_or_not: Decider,
 ) -> dict[int, PointSequence]:
-    """
-    One-dimension DBSCAN clustering: https://en.wikipedia.org/wiki/DBSCAN
-    The input is a list of sequences, and it is guaranteed that all sequences are sorted by time.
-    The function clusters sequences by checking if two sequences can be merged or not.
-
-    - minPoints is always 1
-    - merge_or_not decides if two points are in the same cluster
-    """
+    # One-dimension DBSCAN clustering: https://en.wikipedia.org/wiki/DBSCAN
+    # The input is a list of sequences, and it is guaranteed that all sequences are sorted by time.
+    # The function clusters sequences by checking if two sequences can be merged or not.
+    #
+    # - minPoints is always 1
+    # - merge_or_not decides if two points are in the same cluster
 
     # find which sequences (keys) should be merged to which sequences (values)
     mergeto: dict[int, int] = {}

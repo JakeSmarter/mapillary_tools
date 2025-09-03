@@ -303,10 +303,8 @@ class MovieBoxParser:
                 yield TrackBoxParser(T.cast(T.Sequence[cparser.BoxDict], box["data"]))
 
     def extract_track_at(self, stream_idx: int) -> TrackBoxParser:
-        """
-        stream_idx should be the stream_index specifier. See http://ffmpeg.org/ffmpeg.html#Stream-specifiers-1
-        > Stream numbering is based on the order of the streams as detected by libavformat
-        """
+        # stream_idx should be the stream_index specifier. See http://ffmpeg.org/ffmpeg.html#Stream-specifiers-1
+        # > Stream numbering is based on the order of the streams as detected by libavformat
         trak_boxes = [box for box in self.moov_children if box["type"] == b"trak"]
         if not (0 <= stream_idx < len(trak_boxes)):
             raise IndexError(
@@ -324,7 +322,5 @@ _DT_1904 = datetime.datetime.fromtimestamp(0, datetime.timezone.utc).replace(yea
 
 
 def to_datetime(seconds_since_1904: int) -> datetime.datetime:
-    """
-    Convert seconds since midnight, Jan. 1, 1904, in UTC time
-    """
+    # Convert seconds since midnight, Jan. 1, 1904, in UTC time
     return _DT_1904 + datetime.timedelta(seconds=seconds_since_1904)

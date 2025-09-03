@@ -19,9 +19,7 @@ TImageExtractor = T.TypeVar("TImageExtractor", bound=BaseImageExtractor)
 
 
 class GeotagImagesFromGeneric(abc.ABC, T.Generic[TImageExtractor]):
-    """
-    Extracts metadata from a list of image files with multiprocessing.
-    """
+    # Extracts metadata from a list of image files with multiprocessing.
 
     def __init__(self, num_processes: int | None = None) -> None:
         self.num_processes = num_processes
@@ -87,9 +85,7 @@ TVideoExtractor = T.TypeVar("TVideoExtractor", bound=BaseVideoExtractor)
 
 
 class GeotagVideosFromGeneric(abc.ABC, T.Generic[TVideoExtractor]):
-    """
-    Extracts metadata from a list of video files with multiprocessing.
-    """
+    # Extracts metadata from a list of video files with multiprocessing.
 
     def __init__(self, num_processes: int | None = None) -> None:
         self.num_processes = num_processes

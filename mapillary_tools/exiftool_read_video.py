@@ -83,12 +83,10 @@ def _extract_alternative_fields(
 
 
 def _same_gps_point(left: GPSPoint, right: GPSPoint) -> bool:
-    """
-    >>> left =  GPSPoint(time=56.0, lat=36.741385, lon=29.021274, alt=141.6, angle=1.54, epoch_time=None, fix=None, precision=None, ground_speed=None)
-    >>> right = GPSPoint(time=56.0, lat=36.741385, lon=29.021274, alt=142.4, angle=1.54, epoch_time=None, fix=None, precision=None, ground_speed=None)
-    >>> _same_gps_point(left, right)
-    True
-    """
+    # >>> left =  GPSPoint(time=56.0, lat=36.741385, lon=29.021274, alt=141.6, angle=1.54, epoch_time=None, fix=None, precision=None, ground_speed=None)
+    # >>> right = GPSPoint(time=56.0, lat=36.741385, lon=29.021274, alt=142.4, angle=1.54, epoch_time=None, fix=None, precision=None, ground_speed=None)
+    # >>> _same_gps_point(left, right)
+    # True
     return (
         left.time == right.time
         and left.lon == right.lon
@@ -118,12 +116,10 @@ def _aggregate_gps_track(
     direction_tag: str | None = None,
     ground_speed_tag: str | None = None,
 ) -> list[GPSPoint]:
-    """
-    Aggregate all GPS data by the tags.
-    It requires lat, lon to be present, and their lengths must match.
-    Some cameras store time information in the SimpleTime tag (and each simple has multiple GPS data points),
-    therefore the time_tag is optional. If it is None, then all returned points will have time = 0.0.
-    """
+    # Aggregate all GPS data by the tags.
+    # It requires lat, lon to be present, and their lengths must match.
+    # Some cameras store time information in the SimpleTime tag (and each simple has multiple GPS data points),
+    # therefore the time_tag is optional. If it is None, then all returned points will have time = 0.0.
 
     # aggregate coordinates (required)
     lons = [

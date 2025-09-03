@@ -13,15 +13,13 @@ from . import (
 from .construct_mp4_parser import BoxDict
 from .mp4_sample_parser import RawSample
 
-"""
-Variable naming conventions:
-
-- *_box: a BoxDict
-- *_children: a list of child BoxDicts under the parent box
-- *_boxdata: BoxDict["data"]
-- *_data: the data in bytes of a box (without the header (type and size))
-- *_typed_data: the data in bytes of a box (with the header (type and size))
-"""
+# Variable naming conventions:
+#
+# - *_box: a BoxDict
+# - *_children: a list of child BoxDicts under the parent box
+# - *_boxdata: BoxDict["data"]
+# - *_data: the data in bytes of a box (without the header (type and size))
+# - *_typed_data: the data in bytes of a box (with the header (type and size))
 
 
 UINT32_MAX = 2**32 - 1

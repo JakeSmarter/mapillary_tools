@@ -23,9 +23,7 @@ class ChainedIO(io.IOBase):
         self._idx = 0
 
     def _seek_next_stream(self) -> None:
-        """
-        seek to the end of the current stream, and seek to the beginning of the next stream
-        """
+        # seek to the end of the current stream, and seek to the beginning of the next stream
         if self._idx < len(self._streams):
             s = self._streams[self._idx]
             ssize = s.seek(0, io.SEEK_END)

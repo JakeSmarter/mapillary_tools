@@ -23,51 +23,49 @@ PointSequence = T.List[geo.PointLike]
 def split_sequence_by(
     sequence: T.Iterable[S], reduce: T.Callable[[R, S], tuple[R, bool]], initial: R
 ) -> list[list[S]]:
-    """
-    Split a sequence into multiple subsequences based on a reduction function.
-
-    The function processes each element through a reduce function that maintains
-    state and determines whether to split the sequence at that point. When a split
-    is triggered, a new subsequence starts with the current element.
-
-    Args:
-        sequence: An iterable of elements to split
-        reduce: A function that takes (accumulated_state, current_element) and
-               returns (new_state, should_split). If should_split is True,
-               a new subsequence starts with the current element.
-        initial: The initial state value passed to the reduce function
-
-    Returns:
-        A list of subsequences, where each subsequence is a list of elements
-
-    Examples:
-        >>> # Split on even numbers
-        >>> def split_on_even(count, x):
-        ...     return count + 1, x % 2 == 0
-        >>> split_sequence_by([1, 3, 2, 4, 5, 6, 7], split_on_even, 0)
-        [[1, 3], [2], [4, 5], [6, 7]]
-
-        >>> # Split when sum exceeds threshold
-        >>> def split_when_sum_exceeds_5(total, x):
-        ...     total += x
-        ...     return (x, True) if total > 5 else (total, False)
-        >>> split_sequence_by([1, 2, 3, 4, 1, 2], split_when_sum_exceeds_5, 0)
-        [[1, 2], [3], [4, 1], [2]]
-
-        >>> # Split on specific values
-        >>> def split_on_zero(_, x):
-        ...     return None, x == 0
-        >>> split_sequence_by([1, 2, 0, 3, 4, 0, 5], split_on_zero, None)
-        [[1, 2], [0, 3, 4], [0, 5]]
-
-        >>> # Empty sequence
-        >>> split_sequence_by([], lambda s, x: (s, False), 0)
-        []
-
-        >>> # Single element
-        >>> split_sequence_by([42], lambda s, x: (s, False), 0)
-        [[42]]
-    """
+    # Split a sequence into multiple subsequences based on a reduction function.
+    #
+    # The function processes each element through a reduce function that maintains
+    # state and determines whether to split the sequence at that point. When a split
+    # is triggered, a new subsequence starts with the current element.
+    #
+    # Args:
+    #     sequence: An iterable of elements to split
+    #     reduce: A function that takes (accumulated_state, current_element) and
+    #            returns (new_state, should_split). If should_split is True,
+    #            a new subsequence starts with the current element.
+    #     initial: The initial state value passed to the reduce function
+    #
+    # Returns:
+    #     A list of subsequences, where each subsequence is a list of elements
+    #
+    # Examples:
+    #     >>> # Split on even numbers
+    #     >>> def split_on_even(count, x):
+    #     ...     return count + 1, x % 2 == 0
+    #     >>> split_sequence_by([1, 3, 2, 4, 5, 6, 7], split_on_even, 0)
+    #     [[1, 3], [2], [4, 5], [6, 7]]
+    #
+    #     >>> # Split when sum exceeds threshold
+    #     >>> def split_when_sum_exceeds_5(total, x):
+    #     ...     total += x
+    #     ...     return (x, True) if total > 5 else (total, False)
+    #     >>> split_sequence_by([1, 2, 3, 4, 1, 2], split_when_sum_exceeds_5, 0)
+    #     [[1, 2], [3], [4, 1], [2]]
+    #
+    #     >>> # Split on specific values
+    #     >>> def split_on_zero(_, x):
+    #     ...     return None, x == 0
+    #     >>> split_sequence_by([1, 2, 0, 3, 4, 0, 5], split_on_zero, None)
+    #     [[1, 2], [0, 3, 4], [0, 5]]
+    #
+    #     >>> # Empty sequence
+    #     >>> split_sequence_by([], lambda s, x: (s, False), 0)
+    #     []
+    #
+    #     >>> # Single element
+    #     >>> split_sequence_by([42], lambda s, x: (s, False), 0)
+    #     [[42]]
 
     output_sequences: list[list[S]] = []
 
@@ -93,10 +91,8 @@ def duplication_check(
     max_duplicate_distance: float,
     max_duplicate_angle: float,
 ) -> tuple[PointSequence, list[types.ErrorMetadata]]:
-    """
-    >>> duplication_check([], max_duplicate_distance=1, max_duplicate_angle=2)
-    ([], [])
-    """
+    # >>> duplication_check([], max_duplicate_distance=1, max_duplicate_angle=2)
+    # ([], [])
 
     dedups: PointSequence = []
     dups: list[types.ErrorMetadata] = []
@@ -152,23 +148,21 @@ def _group_images_by(
 
 
 def _interpolate_subsecs_for_sorting(sequence: PointSequence) -> None:
-    """
-    Update the timestamps to make sure they are unique and sorted
-    in the same order by interpolating subseconds
-
-    Examples:
-        >>> def make_point(t):
-        ...     return geo.Point(lat=0, lon=0, time=t, alt=None, angle=None)
-        >>> points = [make_point(t) for t in [1, 1, 1, 1, 1, 2]]
-        >>> _interpolate_subsecs_for_sorting(points)
-        >>> [p.time for p in points]
-        [1.0, 1.2, 1.4, 1.6, 1.8, 2]
-
-        >>> points = [make_point(t) for t in [1.1]]
-        >>> _interpolate_subsecs_for_sorting(points)
-        >>> [p.time for p in points]
-        [1.1]
-    """
+    # Update the timestamps to make sure they are unique and sorted
+    # in the same order by interpolating subseconds
+    #
+    # Examples:
+    #     >>> def make_point(t):
+    #     ...     return geo.Point(lat=0, lon=0, time=t, alt=None, angle=None)
+    #     >>> points = [make_point(t) for t in [1, 1, 1, 1, 1, 2]]
+    #     >>> _interpolate_subsecs_for_sorting(points)
+    #     >>> [p.time for p in points]
+    #     [1.0, 1.2, 1.4, 1.6, 1.8, 2]
+    #
+    #     >>> points = [make_point(t) for t in [1.1]]
+    #     >>> _interpolate_subsecs_for_sorting(points)
+    #     >>> [p.time for p in points]
+    #     [1.1]
 
     gidx = 0
     for _, g in itertools.groupby(sequence, key=lambda point: int(point.time * 1e3)):

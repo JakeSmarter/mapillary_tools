@@ -11,27 +11,25 @@ import construct as C
 from .. import telemetry
 from ..mp4.mp4_sample_parser import MovieBoxParser, Sample, TrackBoxParser
 
-"""
-Parsing GPS from GPMF data format stored in GoPros. See the GPMF spec: https://github.com/gopro/gpmf-parser
-
-A GPS GPMF sample has the following structure:
-- DEVC: Each connected device starts with DEVC.
-    - DVID: Auto generated unique-ID for managing a large number of connect devices
-    - STRM: Metadata streams are each nested with STRM
-         - GPS5: latitude, longitude, altitude (WGS 84), 2D ground speed, and 3D speed
-         - GPS9: lat, long, alt, 2D speed, 3D speed, days since 2000, secs since midnight (ms precision), DOP, fix (0, 2D or 3D)
-         - GPSA: not documented in the spec
-         - GPSF: Within the GPS stream: 0 - no lock, 2 or 3 - 2D or 3D Lock.
-         - GPSP: GPS Precision - Dilution of Precision (DOP x100). Under 500 is good.
-         - GPSU: UTC time and data from GPS. The time is read from from another clock so it is not in use.
-         - SCAL: Scaling factor (divisor) for GPS5 and GPS9
-
-NOTE:
-- There might be multiple DEVC streams.
-- Only GPS5, GPS9, and SCAL are required. The others are optional.
-- GPSU is not in use. We use the video clock to make sure frames and GPS are in sync.
-- We should skip samples with GPSF==0 or GPSP > 500
-"""
+# Parsing GPS from GPMF data format stored in GoPros. See the GPMF spec: https://github.com/gopro/gpmf-parser
+#
+# A GPS GPMF sample has the following structure:
+# - DEVC: Each connected device starts with DEVC.
+#     - DVID: Auto generated unique-ID for managing a large number of connect devices
+#     - STRM: Metadata streams are each nested with STRM
+#          - GPS5: latitude, longitude, altitude (WGS 84), 2D ground speed, and 3D speed
+#          - GPS9: lat, long, alt, 2D speed, 3D speed, days since 2000, secs since midnight (ms precision), DOP, fix (0, 2D or 3D)
+#          - GPSA: not documented in the spec
+#          - GPSF: Within the GPS stream: 0 - no lock, 2 or 3 - 2D or 3D Lock.
+#          - GPSP: GPS Precision - Dilution of Precision (DOP x100). Under 500 is good.
+#          - GPSU: UTC time and data from GPS. The time is read from from another clock so it is not in use.
+#          - SCAL: Scaling factor (divisor) for GPS5 and GPS9
+#
+# NOTE:
+# - There might be multiple DEVC streams.
+# - Only GPS5, GPS9, and SCAL are required. The others are optional.
+# - GPSU is not in use. We use the video clock to make sure frames and GPS are in sync.
+# - We should skip samples with GPSF==0 or GPSP > 500
 
 
 class KLVDict(T.TypedDict):
@@ -144,9 +142,7 @@ class GoProInfo:
 def extract_gopro_info(
     fp: T.BinaryIO, telemetry_only: bool = False
 ) -> GoProInfo | None:
-    """
-    Return the GoProInfo object if found. None indicates it's not a valid GoPro video.
-    """
+    # Return the GoProInfo object if found. None indicates it's not a valid GoPro video.
 
     moov = MovieBoxParser.parse_stream(fp)
     for track in moov.extract_tracks():
